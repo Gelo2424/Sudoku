@@ -17,7 +17,7 @@ public class SudokuBoard {
         int col = temp[1];
         ArrayList<Integer> numbers = initializeNumbers();
         Collections.shuffle(numbers);
-        for (Integer num : numbers) {
+        for (int num : numbers) {
             if (valid(num, row, col)) {
                 board[row][col] = num;
                 if (fillBoard()) {
@@ -45,8 +45,8 @@ public class SudokuBoard {
         //SQUARE
         int squareX = row / 3;
         int squareY = col / 3;
-        for (int i = squareX * 3; i < squareY * 3 + 3; i++) {
-            for (int j = squareX * 3; j < squareY * 3 + 3; j++) {
+        for (int i = squareX * 3; i < squareX * 3 + 3; i++) {
+            for (int j = squareY * 3; j < squareY * 3 + 3; j++) {
                 if (board[i][j] == num && i != row && j != col) {
                     return false;
                 }
@@ -74,6 +74,14 @@ public class SudokuBoard {
         int[] nums = {1,2,3,4,5,6,7,8,9};
         for (int n : nums) {
             temp.add(n);
+        }
+        return temp;
+    }
+
+    public int[][] getCopyOfBoard() {
+        int[][] temp = new int[SIZE][];
+        for(int i = 0; i < SIZE; i++) {
+            System.arraycopy(board, 0, temp, 0, SIZE);
         }
         return temp;
     }
