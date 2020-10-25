@@ -1,11 +1,12 @@
 package pl.module;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class SudokuBoard {
 
-    public static final int SIZE = 9;
+    private static final int SIZE = 9;
     private final int[][] board = new int[SIZE][SIZE];
 
     public boolean fillBoard() {
@@ -78,12 +79,16 @@ public class SudokuBoard {
         return temp;
     }
 
-    public int[][] getCopyOfBoard() {
+    /*public int[][] getCopyOfBoard() {
         int[][] temp = new int[SIZE][];
         for(int i = 0; i < SIZE; i++) {
             System.arraycopy(board, 0, temp, 0, SIZE);
         }
         return temp;
+    }*/
+
+    public int getElement(int row, int col) {
+        return board[row][col];
     }
 
     public void printBoard() {
