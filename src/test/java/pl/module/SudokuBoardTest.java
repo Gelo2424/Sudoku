@@ -2,10 +2,10 @@ package pl.module;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
-
 
 public class SudokuBoardTest {
 
@@ -56,31 +56,22 @@ public class SudokuBoardTest {
     }
 
 
-
     @Test //czy dwa kolejne wywołania fillBoard generuja inny układ
     public void fillBoardTwiceTest() {
         SudokuBoard sudokuBoard = new SudokuBoard();
         SudokuBoard sudokuBoard1 = new SudokuBoard();
         sudokuBoard.fillBoard();
         sudokuBoard1.fillBoard();
-        //int[][] bo1 = sudokuBoard.getCopyOfBoard();
-        //int[][] bo2 = sudokuBoard1.getCopyOfBoard();
 
-        boolean theSame = true;
-
-        int[] tempBoard1 = new int[9];
-        int[] tempBoard2 = new int[9];
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
-                 tempBoard1[j] = sudokuBoard.getElement(i, j);
-                 tempBoard2[j] = sudokuBoard1.getElement(i, j);
-            }
-            if (!Arrays.equals(tempBoard1, tempBoard2)) {
-                theSame = false;
-                break;
+                 if (sudokuBoard.getElement(i,j) != sudokuBoard1.getElement(i,j)) {
+                     assertNotEquals(sudokuBoard1.getElement(i, j), sudokuBoard.getElement(i, j));
+                     return;
+                 }
             }
         }
-        assertFalse(theSame);
+        throw new AssertionError("Tablice identyczne");
     }
 }
 

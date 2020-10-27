@@ -17,7 +17,6 @@ public class SudokuBoard {
         int row = temp[0];
         int col = temp[1];
         ArrayList<Integer> numbers = initializeNumbers();
-        Collections.shuffle(numbers);
         for (int num : numbers) {
             if (valid(num, row, col)) {
                 board[row][col] = num;
@@ -30,7 +29,7 @@ public class SudokuBoard {
         return false;
     }
 
-    public boolean valid(int num, int row, int col) {
+    private boolean valid(int num, int row, int col) {
         //ROW
         for (int i = 0; i < SIZE; i++) {
             if (board[row][i] == num && col != i) {
@@ -56,7 +55,7 @@ public class SudokuBoard {
         return true;
     }
 
-    public int[] findEmpty() {
+    private int[] findEmpty() {
         int []temp = new int[2];
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
@@ -70,43 +69,14 @@ public class SudokuBoard {
         return null;
     }
 
-    public ArrayList<Integer> initializeNumbers() {
-        ArrayList<Integer> temp = new ArrayList<>();
-        int[] nums = {1,2,3,4,5,6,7,8,9};
-        for (int n : nums) {
-            temp.add(n);
-        }
+    private ArrayList<Integer> initializeNumbers() {
+        Integer[] nums = {1,2,3,4,5,6,7,8,9};
+        ArrayList<Integer> temp = new ArrayList<>(Arrays.asList(nums));
+        Collections.shuffle(temp);
         return temp;
     }
-
-    /*public int[][] getCopyOfBoard() {
-        int[][] temp = new int[SIZE][];
-        for(int i = 0; i < SIZE; i++) {
-            System.arraycopy(board, 0, temp, 0, SIZE);
-        }
-        return temp;
-    }*/
 
     public int getElement(int row, int col) {
         return board[row][col];
-    }
-
-    public void printBoard() {
-        for (int i = 0; i < SIZE; i++) {
-            if (i % 3 == 0 && i != 0) {
-                System.out.println("- - - - - - - - - - - -");
-            }
-            for (int j = 0; j < SIZE; j++) {
-                if (j % 3 == 0 && j != 0) {
-                    System.out.print(" | ");
-                }
-
-                if (j == 8) {
-                    System.out.println(board[i][j]);
-                } else {
-                    System.out.print(board[i][j] + " ");
-                }
-            }
-        }
     }
 }
