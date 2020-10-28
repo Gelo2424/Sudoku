@@ -1,53 +1,60 @@
 package pl.module;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 public class SudokuBoard {
 
-    private static final int SIZE = 9;
+    public static final int SIZE = 9;
     private final int[][] board = new int[SIZE][SIZE];
+    private final SudokuSolver sudokuSolver;
 
-    public boolean fillBoard() {
-        int[] temp = findEmpty();
-        if (temp == null) {
-            return true;
-        }
-        int row = temp[0];
-        int col = temp[1];
-        ArrayList<Integer> numbers = initializeNumbers();
-        for (int num : numbers) {
-            if (valid(num, row, col)) {
-                board[row][col] = num;
-                if (fillBoard()) {
-                    return true;
-                }
-                board[row][col] = 0;
-            }
-        }
-        return false;
+    SudokuBoard() {
+        sudokuSolver = new BacktrackingSudokuSolver();
     }
 
-    private boolean valid(int num, int row, int col) {
-        //ROW
-        for (int i = 0; i < SIZE; i++) {
-            if (board[row][i] == num && col != i) {
-                return false;
+    public void solveGame() {
+        sudokuSolver.solve(this);
+    }
+
+    public int getElement(int row, int col) {
+        return board[row][col];
+    }
+
+    public void setElement(int row, int col, int value) {
+        this.board[row][col] = value;
+    }
+
+    public boolean isBoardValid() {
+        //rows and columns
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                for (int k = j + 1; k < 9; k++) {
+                    if (board[i][j] == board[i][k]) {
+                        return false;
+                    }
+                }
+                for (int k = i + 1; k < 9; k++) {
+                    if (board[i][j] == board[k][j]) {
+                        return false;
+                    }
+                }
             }
         }
-        //COLUMN
-        for (int j = 0; j < SIZE; j++) {
-            if (board[j][col] == num && row != j) {
-                return false;
-            }
-        }
-        //SQUARE
-        int squareX = row / 3;
-        int squareY = col / 3;
-        for (int i = squareX * 3; i < squareX * 3 + 3; i++) {
-            for (int j = squareY * 3; j < squareY * 3 + 3; j++) {
-                if (board[i][j] == num && i != row && j != col) {
+        //squares
+        int counter = 0;
+        int[] checkBoard = new int[9];
+        int[] checkList = {1,2,3,4,5,6,7,8,9};
+
+        for (int startRow = 0; startRow < 9; startRow += 3) {
+            for (int startCol = 0; startCol < 9; startCol += 3) {
+                for (int r = startRow; r < startRow + 3; r++) {
+                    for (int c = startCol; c < startCol + 3; c++) {
+                        checkBoard[counter++] = board[r][c];
+                    }
+                }
+                counter = 0;
+                Arrays.sort(checkBoard);
+                if (!Arrays.equals(checkBoard, checkList)) {
                     return false;
                 }
             }
@@ -55,28 +62,4 @@ public class SudokuBoard {
         return true;
     }
 
-    private int[] findEmpty() {
-        int []temp = new int[2];
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                if (board[i][j] == 0) {
-                    temp[0] = i;
-                    temp[1] = j;
-                    return temp;
-                }
-            }
-        }
-        return null;
-    }
-
-    private ArrayList<Integer> initializeNumbers() {
-        Integer[] nums = {1,2,3,4,5,6,7,8,9};
-        ArrayList<Integer> temp = new ArrayList<>(Arrays.asList(nums));
-        Collections.shuffle(temp);
-        return temp;
-    }
-
-    public int getElement(int row, int col) {
-        return board[row][col];
-    }
 }
