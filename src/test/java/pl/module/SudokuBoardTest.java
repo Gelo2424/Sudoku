@@ -1,78 +1,49 @@
 package pl.module;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-
-import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class SudokuBoardTest {
-/*
-    TESTY DO REFRAKTORINGU!!!!
 
-    @Test //czy tablica wygenerowana poprawnie
-    public void fillBoardTest() {
+    @Test
+    public void setAndGetElementTest() {
         SudokuBoard sudokuBoard = new SudokuBoard();
-        sudokuBoard.fillBoard();
-        //int[][] bo = sudokuBoard.getCopyOfBoard();
-
-        //rows
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                for (int k = 0; k < 9; k++) {
-                    assertFalse(sudokuBoard.getElement(i, j)
-                            == sudokuBoard.getElement(i, k) && k != j);
-                }
-            }
-        }
-        //columns
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                for (int k = 0; k < 9; k++) {
-                    assertFalse(sudokuBoard.getElement(i, j)
-                            == sudokuBoard.getElement(k, j) && k != i);
-                }
-            }
-        }
-        //squares
-        int inboardcounter = 0;
-        int[] checkBoard = new int[9];
-        int[] checkList = {1,2,3,4,5,6,7,8,9};
-
-        for (int startRow = 0; startRow < 9; startRow += 3) {
-            for (int startCol = 0; startCol < 9; startCol += 3) {
-                for (int r = startRow; r < startRow + 3; r++) {
-                    for (int c = startCol; c < startCol + 3; c++) {
-                        checkBoard[inboardcounter++] = sudokuBoard.getElement(r,c);
-                    }
-                }
-                inboardcounter = 0;
-                Arrays.sort(checkBoard);
-                for (int c = 0; c < 9; c++) {
-                    assertArrayEquals(checkBoard, checkList);
-                }
-            }
-        }
+        assertEquals(sudokuBoard.getElement(0,0), 0);
+        sudokuBoard.setElement(0,0,6);
+        assertEquals(sudokuBoard.getElement(0,0), 6);
     }
 
+    @Test
+    public void isBoardValidTest() {
+        SudokuBoard testSudokuBoard1 = new SudokuBoard();
+        SudokuBoard testSudokuBoard2 = new SudokuBoard();
+        SudokuBoard testSudokuBoard3 = new SudokuBoard();
+        testSudokuBoard1.solveGame();
+        testSudokuBoard2.solveGame();
+        testSudokuBoard3.solveGame();
 
-    @Test //czy dwa kolejne wywołania fillBoard generuja inny układ
-    public void fillBoardTwiceTest() {
-        SudokuBoard sudokuBoard = new SudokuBoard();
-        SudokuBoard sudokuBoard1 = new SudokuBoard();
-        sudokuBoard.fillBoard();
-        sudokuBoard1.fillBoard();
+        //plansza poprawna
+        assertTrue(testSudokuBoard1.isBoardValid());
 
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                 if (sudokuBoard.getElement(i,j) != sudokuBoard1.getElement(i,j)) {
-                     assertNotEquals(sudokuBoard1.getElement(i, j), sudokuBoard.getElement(i, j));
-                     return;
-                 }
-            }
+        //blad w wierszu
+        testSudokuBoard1.setElement(0,0, testSudokuBoard1.getElement(0, 1));
+        assertFalse(testSudokuBoard1.isBoardValid());
+
+        //blad w kolumnie
+        int temp = testSudokuBoard2.getElement(2,1);
+        testSudokuBoard2.setElement(2, 1, testSudokuBoard2.getElement(2, 0));
+        testSudokuBoard2.setElement(2,0, temp);
+        assertFalse(testSudokuBoard2.isBoardValid());
+
+        //blad w kwadracie
+        for (int i = 0; i < 9; i ++) {
+            temp = testSudokuBoard3.getElement(2, i);
+            testSudokuBoard3.setElement(2, i, testSudokuBoard3.getElement(3, i));
+            testSudokuBoard3.setElement(3, i, temp);
         }
-        throw new AssertionError("Tablice identyczne");
-    }*/
+        assertFalse(testSudokuBoard3.isBoardValid());
+    }
+
 }
 
