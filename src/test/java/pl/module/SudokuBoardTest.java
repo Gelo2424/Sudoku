@@ -1,8 +1,10 @@
 package pl.module;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class SudokuBoardTest {
 
@@ -37,7 +39,7 @@ public class SudokuBoardTest {
         assertFalse(testSudokuBoard2.isBoardValid());
 
         //blad w kwadracie
-        for (int i = 0; i < 9; i ++) {
+        for (int i = 0; i < 9; i++) {
             temp = testSudokuBoard3.getElement(2, i);
             testSudokuBoard3.setElement(2, i, testSudokuBoard3.getElement(3, i));
             testSudokuBoard3.setElement(3, i, temp);
