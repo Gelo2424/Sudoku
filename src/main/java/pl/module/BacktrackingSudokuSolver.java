@@ -20,11 +20,11 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
         ArrayList<Integer> numbers = initializeNumbers();
         for (int num : numbers) {
             if (valid(board, num, row, col)) {
-                board.setElement(row, col, num);
+                board.set(row, col, num);
                 if (fillBoard(board)) {
                     return true;
                 }
-                board.setElement(row, col, 0);
+                board.set(row, col, 0);
             }
         }
         return false;
@@ -33,13 +33,13 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
     private boolean valid(SudokuBoard board, int num, int row, int col) {
         //ROW
         for (int i = 0; i < SudokuBoard.SIZE; i++) {
-            if (board.getElement(row, i) == num && col != i) {
+            if (board.get(row, i) == num && col != i) {
                 return false;
             }
         }
         //COLUMN
         for (int j = 0; j < SudokuBoard.SIZE; j++) {
-            if (board.getElement(j, col) == num && row != j) {
+            if (board.get(j, col) == num && row != j) {
                 return false;
             }
         }
@@ -48,7 +48,7 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
         int squareY = col / 3;
         for (int i = squareX * 3; i < squareX * 3 + 3; i++) {
             for (int j = squareY * 3; j < squareY * 3 + 3; j++) {
-                if (board.getElement(i, j) == num && i != row && j != col) {
+                if (board.get(i, j) == num && i != row && j != col) {
                     return false;
                 }
             }
@@ -60,7 +60,7 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
         int []temp = new int[2];
         for (int i = 0; i < SudokuBoard.SIZE; i++) {
             for (int j = 0; j < SudokuBoard.SIZE; j++) {
-                if (board.getElement(i, j) == 0) {
+                if (board.get(i, j) == 0) {
                     temp[0] = i;
                     temp[1] = j;
                     return temp;

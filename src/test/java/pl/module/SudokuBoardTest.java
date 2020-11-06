@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 public class SudokuBoardTest {
-
+/*
     @Test
     public void setAndGetElementTest() {
         SudokuBoard sudokuBoard = new SudokuBoard();
@@ -46,6 +46,6 @@ public class SudokuBoardTest {
         }
         assertFalse(testSudokuBoard3.isBoardValid());
     }
-
+*/
 }
 
