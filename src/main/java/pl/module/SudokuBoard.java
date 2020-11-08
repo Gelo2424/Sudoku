@@ -14,10 +14,17 @@ public class SudokuBoard {
 
     SudokuBoard(SudokuSolver sudokuSolver) {
         this.sudokuSolver = sudokuSolver;
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                this.board[i][j] = new SudokuField();
+            }
+        }
     }
 
     public void solveGame() {
         sudokuSolver.solve(this);
+        checkBoard();
+
     }
 
     public SudokuRow getRow(int y) {
@@ -55,45 +62,29 @@ public class SudokuBoard {
         board[x][y].setFieldValue(value);
     }
 
-
-
-    /*
-    public boolean checkboard() {
+    private boolean checkBoard() {
         //rows and columns
         for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                for (int k = j + 1; k < 9; k++) {
-                    if (board[i][j] == board[i][k]) {
-                        return false;
-                    }
-                }
-                for (int k = i + 1; k < 9; k++) {
-                    if (board[i][j] == board[k][j]) {
-                        return false;
-                    }
-                }
+            SudokuRow row = getRow(i);
+            SudokuColumn col = getColumn(i);
+            if (!row.verify() || !col.verify()) {
+                return false;
             }
-        }
-        //squares
-        int counter = 0;
-        int[] checkBoard = new int[9];
-        int[] checkList = {1,2,3,4,5,6,7,8,9};
 
-        for (int startRow = 0; startRow < 9; startRow += 3) {
-            for (int startCol = 0; startCol < 9; startCol += 3) {
-                for (int r = startRow; r < startRow + 3; r++) {
-                    for (int c = startCol; c < startCol + 3; c++) {
-                        checkBoard[counter++] = board[r][c];
-                    }
-                }
-                counter = 0;
-                Arrays.sort(checkBoard);
-                if (!Arrays.equals(checkBoard, checkList)) {
+        }
+        //boxes
+        for (int i = 0; i < 9; i += 3) {
+            for (int j = 0; j < 9; j += 3) {
+                SudokuBox box = getBox(i, j);
+                if (!box.verify()) {
                     return false;
                 }
             }
         }
         return true;
     }
-    */
+
+    public boolean checkBoardForTests() {
+        return checkBoard();
+    }
 }

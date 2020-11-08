@@ -5,47 +5,86 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
+import pl.module.elements.SudokuBox;
+import pl.module.elements.SudokuColumn;
+import pl.module.elements.SudokuRow;
 
 public class SudokuBoardTest {
-/*
+
+    private final BacktrackingSudokuSolver solver;
+    private final SudokuBoard board;
+
+
+    public SudokuBoardTest() {
+        this.solver = new BacktrackingSudokuSolver();
+        this.board = new SudokuBoard(solver);
+        board.solveGame();
+
+    }
+
     @Test
     public void setAndGetElementTest() {
-        SudokuBoard sudokuBoard = new SudokuBoard();
-        assertEquals(sudokuBoard.getElement(0,0), 0);
-        sudokuBoard.setElement(0,0,6);
-        assertEquals(sudokuBoard.getElement(0,0), 6);
+        SudokuBoard sudokuBoard = new SudokuBoard(solver);
+        assertEquals(sudokuBoard.get(0,0), 0);
+        sudokuBoard.set(0,0,6);
+        assertEquals(sudokuBoard.get(0,0), 6);
     }
 
     @Test
-    public void isBoardValidTest() {
-        SudokuBoard testSudokuBoard1 = new SudokuBoard();
-        SudokuBoard testSudokuBoard2 = new SudokuBoard();
-        SudokuBoard testSudokuBoard3 = new SudokuBoard();
-        testSudokuBoard1.solveGame();
-        testSudokuBoard2.solveGame();
-        testSudokuBoard3.solveGame();
+    public void getRowTest() {
+        SudokuRow row = board.getRow(0);
+        assertTrue(row.verify());
 
-        //plansza poprawna
-        assertTrue(testSudokuBoard1.isBoardValid());
-
-        //blad w wierszu
-        testSudokuBoard1.setElement(0,0, testSudokuBoard1.getElement(0, 1));
-        assertFalse(testSudokuBoard1.isBoardValid());
-
-        //blad w kolumnie
-        int temp = testSudokuBoard2.getElement(2,1);
-        testSudokuBoard2.setElement(2, 1, testSudokuBoard2.getElement(2, 0));
-        testSudokuBoard2.setElement(2,0, temp);
-        assertFalse(testSudokuBoard2.isBoardValid());
-
-        //blad w kwadracie
-        for (int i = 0; i < 9; i++) {
-            temp = testSudokuBoard3.getElement(2, i);
-            testSudokuBoard3.setElement(2, i, testSudokuBoard3.getElement(3, i));
-            testSudokuBoard3.setElement(3, i, temp);
-        }
-        assertFalse(testSudokuBoard3.isBoardValid());
+        SudokuBoard board2 = board;
+        board2.set(0, 1, board2.get(0,0));
+        row = board2.getRow(0);
+        assertFalse(row.verify());
     }
-*/
+
+    @Test
+    public void getColumnTest() {
+        SudokuColumn column = board.getColumn(0);
+        assertTrue(column.verify());
+
+        SudokuBoard board2 = board;
+        board2.set(1, 0, board2.get(0,0));
+        column = board2.getColumn(0);
+        assertFalse(column.verify());
+    }
+
+    @Test
+    public void getBoxTest() {
+        SudokuBox box = board.getBox(0, 0);
+        assertTrue(box.verify());
+
+        SudokuBoard board2 = board;
+        for (int i = 0; i < 9; i++) {
+            int temp = board2.get(2, i);
+            board2.set(2, i, board2.get(3, i));
+            board2.set(3, i, temp);
+        }
+        box = board2.getBox(3, 0);
+        assertFalse(box.verify());
+    }
+
+    @Test
+    public void checkBoardTest() {
+        SudokuBoard board1 = board;
+        for (int i = 0; i < 9; i++) {
+            int temp = board1.get(2, i);
+            board1.set(2, i, board1.get(3, i));
+            board1.set(3, i, temp);
+        }
+        assertFalse(board1.checkBoardForTests());
+
+        SudokuBoard board2 = board;
+        board2.set(1, 0, board2.get(0,0));
+        assertFalse(board2.checkBoardForTests());
+
+        SudokuBoard board3 = board;
+        board3.set(0, 1, board3.get(0,0));
+        assertFalse(board3.checkBoardForTests());
+    }
+
 }
 

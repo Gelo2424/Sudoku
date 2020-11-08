@@ -1,6 +1,7 @@
 package pl.module.elements;
 
 import java.util.Arrays;
+import java.util.Collections;
 import pl.module.SudokuBoard;
 
 
@@ -15,10 +16,11 @@ public class SudokuElement {
     }
 
     public boolean verify() {
-        Arrays.sort(element);
-        for (int i = 1; i < 10; i++) {
-            if (element[i].getFieldValue() != i) {
-                return false;
+        for (int i = 0; i < 9; i++) {
+            for (int j = i + 1; j < 9; j++) {
+                if (element[i].getFieldValue() == element[j].getFieldValue()) {
+                    return false;
+                }
             }
         }
         return true;

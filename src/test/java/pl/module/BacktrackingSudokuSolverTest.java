@@ -8,18 +8,20 @@ import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
 public class BacktrackingSudokuSolverTest {
-/*
+
+    private final BacktrackingSudokuSolver solver = new BacktrackingSudokuSolver();
+
     @Test //czy tablica wygenerowana poprawnie
     public void fillBoardTest() {
-        SudokuBoard sudokuBoard = new SudokuBoard();
+        SudokuBoard sudokuBoard = new SudokuBoard(solver);
         sudokuBoard.solveGame();
 
         //rows
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 for (int k = 0; k < 9; k++) {
-                    assertFalse(sudokuBoard.getElement(i, j)
-                            == sudokuBoard.getElement(i, k) && k != j);
+                    assertFalse(sudokuBoard.get(i, j)
+                            == sudokuBoard.get(i, k) && k != j);
                 }
             }
         }
@@ -27,8 +29,8 @@ public class BacktrackingSudokuSolverTest {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 for (int k = 0; k < 9; k++) {
-                    assertFalse(sudokuBoard.getElement(i, j)
-                            == sudokuBoard.getElement(k, j) && k != i);
+                    assertFalse(sudokuBoard.get(i, j)
+                            == sudokuBoard.get(k, j) && k != i);
                 }
             }
         }
@@ -41,7 +43,7 @@ public class BacktrackingSudokuSolverTest {
             for (int startCol = 0; startCol < 9; startCol += 3) {
                 for (int r = startRow; r < startRow + 3; r++) {
                     for (int c = startCol; c < startCol + 3; c++) {
-                        checkBoard[inboardcounter++] = sudokuBoard.getElement(r,c);
+                        checkBoard[inboardcounter++] = sudokuBoard.get(r,c);
                     }
                 }
                 inboardcounter = 0;
@@ -56,20 +58,20 @@ public class BacktrackingSudokuSolverTest {
 
     @Test //czy dwa kolejne wywołania fillBoard generuja inny układ
     public void fillBoardTwiceTest() {
-        SudokuBoard sudokuBoard = new SudokuBoard();
-        SudokuBoard sudokuBoard1 = new SudokuBoard();
+        SudokuBoard sudokuBoard = new SudokuBoard(solver);
+        SudokuBoard sudokuBoard1 = new SudokuBoard(solver);
         sudokuBoard.solveGame();
         sudokuBoard1.solveGame();
 
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
-                 if (sudokuBoard.getElement(i,j) != sudokuBoard1.getElement(i,j)) {
-                     assertNotEquals(sudokuBoard1.getElement(i, j), sudokuBoard.getElement(i, j));
+                 if (sudokuBoard.get(i,j) != sudokuBoard1.get(i,j)) {
+                     assertNotEquals(sudokuBoard1.get(i, j), sudokuBoard.get(i, j));
                      return;
                  }
             }
         }
         throw new AssertionError("Tablice identyczne");
     }
-    */
+
 }
