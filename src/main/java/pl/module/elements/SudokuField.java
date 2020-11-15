@@ -4,6 +4,14 @@ public class SudokuField {
 
     private int value;
 
+    public SudokuField() {
+        this.setFieldValue(value);
+    }
+
+    public SudokuField(int value) {
+        this.setFieldValue(value);
+    }
+
     public int getFieldValue() {
         return value;
     }

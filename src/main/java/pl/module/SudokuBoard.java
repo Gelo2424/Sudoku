@@ -1,5 +1,7 @@
 package pl.module;
 
+import java.util.Arrays;
+import java.util.List;
 import pl.module.elements.SudokuBox;
 import pl.module.elements.SudokuColumn;
 import pl.module.elements.SudokuField;
@@ -28,27 +30,29 @@ public class SudokuBoard {
     }
 
     public SudokuRow getRow(int y) {
-        SudokuField[] row = new SudokuField[SIZE];
-        System.arraycopy(board[y], 0, row, 0, SIZE);
+        List<SudokuField> row = Arrays.asList(new SudokuField[SIZE]);
+        for (int i = 0; i < 9; i++) {
+            row.set(i, board[y][i]);
+        }
         return new SudokuRow(row);
     }
 
     public SudokuColumn getColumn(int x) {
-        SudokuField[] column = new SudokuField[SIZE];
+        List<SudokuField> column = Arrays.asList(new SudokuField[SIZE]);
         for (int i = 0; i < 9; i++) {
-            column[i] = board[i][x];
+            column.set(i, board[i][x]);
         }
         return new SudokuColumn(column);
     }
 
     public SudokuBox getBox(int x, int y) {
-        SudokuField[] box = new SudokuField[SIZE];
+        List<SudokuField> box = Arrays.asList(new SudokuField[SIZE]);
         int counter = 0;
         int squareX = x / 3;
         int squareY = y / 3;
         for (int i = squareX * 3; i < squareX * 3 + 3; i++) {
             for (int j = squareY * 3; j < squareY * 3 + 3; j++) {
-                box[counter++] = board[i][j];
+                box.set(counter++, board[i][j]);
             }
         }
         return new SudokuBox(box);

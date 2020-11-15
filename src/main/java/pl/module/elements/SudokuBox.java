@@ -1,8 +1,10 @@
 package pl.module.elements;
 
+import java.util.List;
+
 public class SudokuBox extends SudokuElement {
 
-    public SudokuBox(SudokuField[] element) {
+    public SudokuBox(List<SudokuField> element) {
         super(element);
     }
 
