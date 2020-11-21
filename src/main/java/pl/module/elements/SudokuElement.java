@@ -1,7 +1,11 @@
 package pl.module.elements;
 
 import java.util.List;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import pl.module.SudokuBoard;
+
 
 public class SudokuElement {
     private final List<SudokuField> element;
@@ -26,5 +30,20 @@ public class SudokuElement {
 
     public List<SudokuField> getElement() {
         return element;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(element).toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return new EqualsBuilder().append(element, ((SudokuElement) obj).element).isEquals();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append("fields", element).toString();
     }
 }

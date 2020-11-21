@@ -1,6 +1,8 @@
 package pl.module;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -74,6 +76,31 @@ public class SudokuElementTest {
         }
         SudokuRow sudokuRowTest1 = new SudokuRow(row);
         assertSame(sudokuRowTest1.getElement(), row);
+    }
+
+    @Test
+    public void toStringTest() {
+        List<SudokuField> element = Arrays.asList(new SudokuField[9]);
+        SudokuRow row = new SudokuRow(element);
+        assertNotNull(row.toString());
+    }
+
+    @Test
+    public void equalsTest() {
+        List<SudokuField> element1 = Arrays.asList(new SudokuField[9]);
+        List<SudokuField> element2 = Arrays.asList(new SudokuField[9]);
+        SudokuRow row1 = new SudokuRow(element1);
+        SudokuRow row2 = new SudokuRow(element2);
+        assertTrue(row1.equals(row2) && row2.equals(row1));
+    }
+
+    @Test
+    public void hashCodeTest() {
+        List<SudokuField> element1 = Arrays.asList(new SudokuField[9]);
+        List<SudokuField> element2 = Arrays.asList(new SudokuField[9]);
+        SudokuRow row1 = new SudokuRow(element1);
+        SudokuRow row2 = new SudokuRow(element2);
+        assertEquals(row1.hashCode(), row2.hashCode());
     }
 
 }

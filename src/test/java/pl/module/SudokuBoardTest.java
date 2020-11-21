@@ -2,12 +2,14 @@ package pl.module;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import pl.module.elements.SudokuBox;
 import pl.module.elements.SudokuColumn;
 import pl.module.elements.SudokuRow;
+
 
 public class SudokuBoardTest {
 
@@ -19,7 +21,7 @@ public class SudokuBoardTest {
         this.solver = new BacktrackingSudokuSolver();
         this.board = new SudokuBoard(solver);
         board.solveGame();
-
+        System.out.println(this);
     }
 
     @Test
@@ -84,6 +86,29 @@ public class SudokuBoardTest {
         SudokuBoard board3 = board;
         board3.set(0, 1, board3.get(0,0));
         assertFalse(board3.checkBoardForTests());
+    }
+
+    @Test
+    public void toStringTest() {
+        assertNotNull(board.toString());
+    }
+
+    @Test
+    public void equalsTest() {
+        SudokuBoard board1 = new SudokuBoard(solver);
+        SudokuBoard board2 = new SudokuBoard(solver);
+        assertTrue(board1.equals(board2));
+        board1.solveGame();
+        board2.solveGame();
+        assertFalse(board1.equals(board2));
+
+    }
+
+    @Test
+    public void hashCodeTest() {
+        SudokuBoard board1 = new SudokuBoard(solver);
+        SudokuBoard board2 = new SudokuBoard(solver);
+        assertEquals(board1.hashCode(), board2.hashCode());
     }
 
 }
