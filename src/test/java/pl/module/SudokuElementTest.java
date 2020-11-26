@@ -62,7 +62,6 @@ public class SudokuElementTest {
     public void wrongElementSizeTest() {
         try {
             List<SudokuField> element = Arrays.asList(new SudokuField[10]);
-            SudokuRow row = new SudokuRow(element);
         } catch (IllegalArgumentException e) {
             assertTrue(true);
         }
