@@ -1,5 +1,6 @@
 package pl.module;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -12,7 +13,7 @@ import pl.module.elements.SudokuRow;
 
 
 
-public class SudokuBoard {
+public class SudokuBoard implements Serializable {
 
     public static final int SIZE = 9;
     private final SudokuSolver sudokuSolver;

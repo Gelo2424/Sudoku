@@ -1,10 +1,11 @@
 package pl.module;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class BacktrackingSudokuSolver implements SudokuSolver {
+public class BacktrackingSudokuSolver implements SudokuSolver, Serializable {
 
     public void solve(SudokuBoard board) {
         fillBoard(board);

@@ -37,9 +37,6 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
         }
     }
 
-    @Override
-    protected final void finalize() throws Throwable {
-        super.finalize();
-    }
+
 
 }
