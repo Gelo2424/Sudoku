@@ -1,11 +1,13 @@
 package pl.module;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import pl.module.elements.SudokuField;
+
 
 public class SudokuFieldTest {
 
@@ -47,6 +49,9 @@ public class SudokuFieldTest {
         SudokuField sudokuField1 = new SudokuField(1);
         SudokuField sudokuField2 = new SudokuField(1);
         assertTrue(sudokuField1.equals(sudokuField2) && sudokuField2.equals(sudokuField1));
+        assertTrue(sudokuField1.equals(sudokuField1));
+        assertFalse(sudokuField1.equals("board2"));
+        assertFalse(sudokuField1.equals(null));
     }
 
     @Test

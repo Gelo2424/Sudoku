@@ -92,6 +92,9 @@ public class SudokuElementTest {
         SudokuRow row1 = new SudokuRow(element1);
         SudokuRow row2 = new SudokuRow(element2);
         assertTrue(row1.equals(row2) && row2.equals(row1));
+        assertTrue((row1.equals(row1)));
+        assertFalse((row1.equals("")));
+        assertFalse(row1.equals(null));
     }
 
     @Test
@@ -101,6 +104,17 @@ public class SudokuElementTest {
         SudokuRow row1 = new SudokuRow(element1);
         SudokuRow row2 = new SudokuRow(element2);
         assertEquals(row1.hashCode(), row2.hashCode());
+    }
+
+    @Test
+    public void equalAndHasCodeTest() {
+        List<SudokuField> element1 = Arrays.asList(new SudokuField[9]);
+        List<SudokuField> element2 = Arrays.asList(new SudokuField[9]);
+        SudokuRow row = new SudokuRow(element1);
+        SudokuColumn column = new SudokuColumn(element2);
+
+        assertEquals(row.hashCode(), column.hashCode());
+        assertFalse(row.equals(column));
     }
 
 }

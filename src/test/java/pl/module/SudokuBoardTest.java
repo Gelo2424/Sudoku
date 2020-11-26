@@ -21,7 +21,6 @@ public class SudokuBoardTest {
         this.solver = new BacktrackingSudokuSolver();
         this.board = new SudokuBoard(solver);
         board.solveGame();
-        System.out.println(this);
     }
 
     @Test
@@ -101,13 +100,23 @@ public class SudokuBoardTest {
         board1.solveGame();
         board2.solveGame();
         assertFalse(board1.equals(board2));
-
+        assertFalse(board1.equals(null));
+        assertTrue(board1.equals(board1));
+        assertFalse(board1.equals("board2"));
     }
 
     @Test
     public void hashCodeTest() {
         SudokuBoard board1 = new SudokuBoard(solver);
         SudokuBoard board2 = new SudokuBoard(solver);
+        assertEquals(board1.hashCode(), board2.hashCode());
+    }
+
+    @Test
+    public void equalAndHasCodeTest() {
+        SudokuBoard board1 = new SudokuBoard(solver);
+        SudokuBoard board2 = new SudokuBoard(solver);
+        assertTrue(board1.equals(board2));
         assertEquals(board1.hashCode(), board2.hashCode());
     }
 
