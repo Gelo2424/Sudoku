@@ -26,14 +26,18 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.5</version>
+<!--                <configuration>-->
+<!--                    <mainClass>HelloFX</mainClass>-->
+<!--                </configuration>-->
+            </plugin>
+        </plugins>
+    </build>
 
-<!--    <plugin>-->
-<!--        <groupId>org.openjfx</groupId>-->
-<!--        <artifactId>javafx-maven-plugin</artifactId>-->
-<!--        <version>0.0.5</version>-->
-<!--        <configuration>-->
-<!--            <mainClass>HelloFX</mainClass>-->
-<!--        </configuration>-->
-<!--    </plugin>-->
 
 </project>

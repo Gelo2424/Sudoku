@@ -1,7 +1,11 @@
 package pl.module;
 
 public class SudokuBoardDaoFactory {
-    public Dao<SudokuBoard> getFileDao(String fileName) {
+
+    private SudokuBoardDaoFactory() {
+    }
+
+    public static Dao<SudokuBoard> getFileDao(String fileName) {
         return new FileSudokuBoardDao(fileName);
     }
 }

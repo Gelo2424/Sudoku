@@ -1,7 +1,5 @@
 package pl.module;
 
-import org.apache.maven.project.DuplicateArtifactAttachmentException;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -39,4 +37,6 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
         }
     }
 
+    @Override
+    public void close() {}
 }

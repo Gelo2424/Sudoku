@@ -8,12 +8,11 @@ import org.junit.jupiter.api.Test;
 public class FileSudokuBoardDaoTest {
 
     private final SudokuBoard board = new SudokuBoard(new BacktrackingSudokuSolver());
-    private final SudokuBoardDaoFactory daoFactory = new SudokuBoardDaoFactory();
     private Dao<SudokuBoard> fileSudokuBoardDao;
 
     @Test
     public void writeAndReadTest() throws DaoException {
-        fileSudokuBoardDao = daoFactory.getFileDao("test.txt");
+        fileSudokuBoardDao = SudokuBoardDaoFactory.getFileDao("test.txt");
         fileSudokuBoardDao.write(board);
         SudokuBoard board2 = fileSudokuBoardDao.read();
 
@@ -22,7 +21,7 @@ public class FileSudokuBoardDaoTest {
 
     @Test
     public void readIOExceptionTest() {
-        fileSudokuBoardDao = daoFactory.getFileDao("test2");
+        fileSudokuBoardDao = SudokuBoardDaoFactory.getFileDao("test2");
         assertThrows(DaoException.class, () -> {
             fileSudokuBoardDao.read();
         });
@@ -30,7 +29,7 @@ public class FileSudokuBoardDaoTest {
 
     @Test
     public void writeIOExceptionTest() {
-        fileSudokuBoardDao = daoFactory.getFileDao("...");
+        fileSudokuBoardDao = SudokuBoardDaoFactory.getFileDao("...");
         assertThrows(DaoException.class, () -> {
             fileSudokuBoardDao.write(board);
         });
