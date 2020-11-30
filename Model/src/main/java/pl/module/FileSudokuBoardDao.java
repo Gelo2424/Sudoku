@@ -1,5 +1,7 @@
 package pl.module;
 
+import org.apache.maven.project.DuplicateArtifactAttachmentException;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,27 +18,25 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
     }
 
     @Override
-    public SudokuBoard read() {
+    public SudokuBoard read() throws DaoException {
         SudokuBoard board;
         try (ObjectInputStream objectInputStream = new ObjectInputStream(
                 new FileInputStream(fileName))) {
             board = (SudokuBoard) objectInputStream.readObject();
         } catch (ClassNotFoundException | IOException e) {
-            throw new RuntimeException(e);
+            throw new DaoException(e);
         }
         return board;
     }
 
     @Override
-    public void write(SudokuBoard board) {
+    public void write(SudokuBoard board) throws DaoException {
         try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(
                 new FileOutputStream(fileName))) {
             objectOutputStream.writeObject(board);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new DaoException(e);
         }
     }
-
-
 
 }

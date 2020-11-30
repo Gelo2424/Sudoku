@@ -12,7 +12,7 @@ public class FileSudokuBoardDaoTest {
     private Dao<SudokuBoard> fileSudokuBoardDao;
 
     @Test
-    public void writeAndReadTest() {
+    public void writeAndReadTest() throws DaoException {
         fileSudokuBoardDao = daoFactory.getFileDao("test.txt");
         fileSudokuBoardDao.write(board);
         SudokuBoard board2 = fileSudokuBoardDao.read();
@@ -23,7 +23,7 @@ public class FileSudokuBoardDaoTest {
     @Test
     public void readIOExceptionTest() {
         fileSudokuBoardDao = daoFactory.getFileDao("test2");
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(DaoException.class, () -> {
             fileSudokuBoardDao.read();
         });
     }
@@ -31,7 +31,7 @@ public class FileSudokuBoardDaoTest {
     @Test
     public void writeIOExceptionTest() {
         fileSudokuBoardDao = daoFactory.getFileDao("...");
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(DaoException.class, () -> {
             fileSudokuBoardDao.write(board);
         });
     }
