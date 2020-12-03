@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="481.0" prefWidth="780.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.module.MenuWindowController">
+   <children>
+      <Button layoutX="315.0" layoutY="325.0" mnemonicParsing="false" onAction="#startGame" prefHeight="79.0" prefWidth="150.0" text="Start" />
+      <ChoiceBox fx:id="difficultyChoiceBox" layoutX="24.0" layoutY="64.0" prefWidth="150.0" />
+      <Label layoutX="24.0" layoutY="37.0" prefHeight="25.0" prefWidth="86.0" text="Difficulty:" />
+      <Label fx:id="difficultyLevel" alignment="CENTER" contentDisplay="CENTER" layoutX="337.0" layoutY="404.0" prefHeight="33.0" prefWidth="106.0" text="HEJ" textAlignment="CENTER" />
+   </children>
+</AnchorPane>

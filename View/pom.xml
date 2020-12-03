@@ -20,21 +20,32 @@
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
-            <artifactId>javafx</artifactId>
+            <artifactId>javafx-controls</artifactId>
             <version>15.0.1</version>
-            <type>pom</type>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>15.0.1</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
         <plugins>
+<!--            <plugin>--><!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-compiler-plugin</artifactId>-->
+            <!--                <version>3.8.1</version>-->
+            <!--            </plugin>-->
+
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.5</version>
-<!--                <configuration>-->
-<!--                    <mainClass>HelloFX</mainClass>-->
-<!--                </configuration>-->
+                <configuration>
+                    <mainClass>pl.module.Main</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>
