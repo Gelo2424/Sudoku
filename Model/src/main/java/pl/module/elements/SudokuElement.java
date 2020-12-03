@@ -1,5 +1,6 @@
 package pl.module.elements;
 
+import java.io.Serializable;
 import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -7,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import pl.module.SudokuBoard;
 
 
-public class SudokuElement {
+public class SudokuElement implements Serializable, Cloneable {
     private final List<SudokuField> element;
 
     public SudokuElement(List<SudokuField> element) {
@@ -54,5 +55,10 @@ public class SudokuElement {
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("fields", element).toString();
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return new SudokuElement(this.getElement());
     }
 }

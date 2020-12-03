@@ -13,7 +13,7 @@ import pl.module.elements.SudokuRow;
 
 
 
-public class SudokuBoard implements Serializable {
+public class SudokuBoard implements Serializable, Cloneable {
 
     public static final int SIZE = 9;
     private final SudokuSolver sudokuSolver;
@@ -98,6 +98,10 @@ public class SudokuBoard implements Serializable {
         return checkBoard();
     }
 
+    public SudokuSolver getSudokuSolver() {
+        return sudokuSolver;
+    }
+
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37).append(board).toHashCode();
@@ -120,5 +124,16 @@ public class SudokuBoard implements Serializable {
     @Override
     public String toString() {
         return new ToStringBuilder(board).append("board", board).toString();
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        SudokuBoard sudokuBoard = new SudokuBoard(this.getSudokuSolver());
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                sudokuBoard.set(i, j, this.get(i, j));
+            }
+        }
+        return sudokuBoard;
     }
 }
