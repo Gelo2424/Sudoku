@@ -55,15 +55,13 @@ public class SudokuField implements Serializable, Cloneable, Comparable {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        SudokuField sudokuField = new SudokuField();
-        sudokuField.setFieldValue(this.value);
-        return sudokuField;
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     @Override
     public int compareTo(Object o) {
         SudokuField sf = (SudokuField) o;
-        return Integer.compare(sf.getFieldValue(), this.getFieldValue());
+        return this.getFieldValue() - sf.getFieldValue();
     }
 }

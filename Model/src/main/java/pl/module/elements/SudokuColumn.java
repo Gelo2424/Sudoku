@@ -8,4 +8,9 @@ public class SudokuColumn extends SudokuElement {
         super(element);
     }
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return new SudokuColumn(this.getElement());
+    }
+
 }

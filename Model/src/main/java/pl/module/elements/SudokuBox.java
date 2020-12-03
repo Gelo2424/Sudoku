@@ -8,4 +8,8 @@ public class SudokuBox extends SudokuElement {
         super(element);
     }
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return new SudokuBox(this.getElement());
+    }
 }

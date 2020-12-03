@@ -120,5 +120,11 @@ public class SudokuBoardTest {
         assertEquals(board1.hashCode(), board2.hashCode());
     }
 
+    @Test
+    public void cloneTest() throws CloneNotSupportedException {
+        SudokuBoard sudokuBoard1 = new SudokuBoard(solver);
+        SudokuBoard sudokuBoard2 = (SudokuBoard) sudokuBoard1.clone();
+        assertEquals(sudokuBoard1, sudokuBoard2);
+    }
 }
 

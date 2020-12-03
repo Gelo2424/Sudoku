@@ -9,10 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import pl.module.elements.SudokuBox;
-import pl.module.elements.SudokuColumn;
-import pl.module.elements.SudokuField;
-import pl.module.elements.SudokuRow;
+import pl.module.elements.*;
 
 public class SudokuElementTest {
 
@@ -115,6 +112,30 @@ public class SudokuElementTest {
 
         assertEquals(row.hashCode(), column.hashCode());
         assertFalse(row.equals(column));
+    }
+
+    @Test
+    public void rowCloneTest() throws CloneNotSupportedException {
+        List<SudokuField> element = Arrays.asList(new SudokuField[9]);
+        SudokuRow row1 = new SudokuRow(element);
+        SudokuRow row2 = (SudokuRow) row1.clone();
+        assertEquals(row1, row2);
+    }
+
+    @Test
+    public void colCloneTest() throws CloneNotSupportedException {
+        List<SudokuField> element = Arrays.asList(new SudokuField[9]);
+        SudokuColumn col1 = new SudokuColumn(element);
+        SudokuColumn col2 = (SudokuColumn) col1.clone();
+        assertEquals(col1, col2);
+    }
+
+    @Test
+    public void boxCloneTest() throws CloneNotSupportedException {
+        List<SudokuField> element = Arrays.asList(new SudokuField[9]);
+        SudokuBox box1 = new SudokuBox(element);
+        SudokuBox box2 = (SudokuBox) box1.clone();
+        assertEquals(box1, box2);
     }
 
 }

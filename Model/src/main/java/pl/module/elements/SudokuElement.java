@@ -57,8 +57,4 @@ public class SudokuElement implements Serializable, Cloneable {
         return new ToStringBuilder(this).append("fields", element).toString();
     }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return new SudokuElement(this.getElement());
-    }
 }

@@ -38,5 +38,7 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
     }
 
     @Override
-    public void close() {}
+    public void close() {
+
+    }
 }
