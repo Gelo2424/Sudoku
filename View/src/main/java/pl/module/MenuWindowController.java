@@ -16,7 +16,7 @@ import java.io.IOException;
 
 public class MenuWindowController {
 
-    public static DifficultyLevel.Difficulty difficulty;
+    private static DifficultyLevel.Difficulty difficulty;
     private final ObservableList<String> difficulties = FXCollections.observableArrayList("easy", "medium", "hard");
     public ChoiceBox<String> difficultyChoiceBox;
     public Label difficultyLevel;
@@ -58,6 +58,7 @@ public class MenuWindowController {
         Stage stage = new Stage();
         AnchorPane anchorPane = loader.load();
         Scene scene = new Scene(anchorPane);
+        scene.getStylesheets().add("/styles/boardStyle.css");
         stage.setScene(scene);
         stage.show();
         mainAnchorPane.getScene().getWindow().hide();

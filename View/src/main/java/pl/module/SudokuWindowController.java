@@ -1,30 +1,59 @@
 package pl.module;
 
-import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.IOException;
 
+
+
 public class SudokuWindowController {
+
+    @FXML
     public GridPane gridPane;
     public AnchorPane mainAnchorPane;
 
-    public void initialize() {
-        System.out.println(MenuWindowController.getDifficulty());
+    private final SudokuSolver sudokuSolver = new BacktrackingSudokuSolver();
+    private static DifficultyLevel.Difficulty difficulty;
+    private SudokuBoard sudokuBoard = new SudokuBoard(sudokuSolver);
+    private SudokuBoard sudokuBoardCopy = new SudokuBoard(sudokuSolver);
+
+
+    public void initialize() throws CloneNotSupportedException {
+        difficulty = MenuWindowController.getDifficulty();
+        sudokuBoard.solveGame();
+        sudokuBoardCopy = (SudokuBoard) sudokuBoard.clone();
+        DifficultyLevel.prepareBoard(sudokuBoardCopy, difficulty);
+        fillBoard();
+    }
+
+    private void fillBoard() {
         for(int i = 0; i < 9; i++) {
             for(int j = 0; j < 9; j++) {
-                TextField textField = new TextField();
-
-                gridPane.add()
+                NumberTextField textField = new NumberTextField();
+                textField.setAlignment(Pos.CENTER);
+                if(sudokuBoardCopy.get(i, j) != 0) {
+                    textField.setDisable(true);
+                    textField.setOpacity(1);
+                    textField.setId("cell");
+                    textField.setText(String.valueOf(sudokuBoardCopy.get(i, j)));
+                }
+                gridPane.add(textField, j, i);
             }
         }
     }
 
+
+    public void checkBoard() {
+
+        //TODO
+
+    }
 
     public void exit() throws IOException {
 
@@ -36,12 +65,6 @@ public class SudokuWindowController {
         stage.setScene(scene);
         stage.show();
         mainAnchorPane.getScene().getWindow().hide();
-
-    }
-
-    public void checkBoard() {
-
-        //TODO
 
     }
 }

@@ -1,0 +1,17 @@
+.text-field {
+    -fx-background-color: #f4f4f4;
+    -fx-border-insets: 1px;
+    -fx-background-insets: 1px;
+    -fx-text-alignment: center;
+    -fx-pref-width: 100%;
+    -fx-pref-height: 100%;
+    /*-fx-min-width: 100%;*/
+    /*-fx-min-height: 100%;*/
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+#cell {
+    -fx-font-weight: NORMAL;
+    -fx-text-fill: grey;
+}
