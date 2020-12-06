@@ -10,38 +10,39 @@ public class DifficultyLevel {
         EASY, MEDIUM, HARD;
     }
 
+    private DifficultyLevel() {
+    }
+
     public static void prepareBoard(SudokuBoard bo, Difficulty difficulty) {
         int size = SudokuBoard.SIZE;
-        int cells = size*9;
+        int cells = size * 9;
 
-        if(difficulty == Difficulty.EASY) {
-            int blankPerRow = (int)((cells * 0.30)/size);
-            for(int i = 0; i < 9; i++) {
+        if (difficulty == Difficulty.EASY) {
+            int blankPerRow = (int)((cells * 0.30) / size);
+            for (int i = 0; i < 9; i++) {
                 ArrayList<Integer> nums = randNumbers(blankPerRow);
-                for(int j = 0; j < 9; j++) {
-                    if(!nums.contains(j+1)) {
+                for (int j = 0; j < 9; j++) {
+                    if (!nums.contains(j + 1)) {
                         bo.set(i, j, 0);
                     }
                 }
             }
-        }
-        else if(difficulty == Difficulty.MEDIUM) {
-            int blankPerRow = (int)((cells * 0.50)/size);
-            for(int i = 0; i < 9; i++) {
+        } else if (difficulty == Difficulty.MEDIUM) {
+            int blankPerRow = (int)((cells * 0.50) / size);
+            for (int i = 0; i < 9; i++) {
                 ArrayList<Integer> nums = randNumbers(blankPerRow);
-                for(int j = 0; j < 9; j++) {
-                    if(!nums.contains(j+1)) {
+                for (int j = 0; j < 9; j++) {
+                    if (!nums.contains(j + 1)) {
                         bo.set(i, j, 0);
                     }
                 }
             }
-        }
-        else{
-            int blankPerRow = (int)((cells * 0.70)/size);
-            for(int i = 0; i < 9; i++) {
+        } else {
+            int blankPerRow = (int)((cells * 0.70) / size);
+            for (int i = 0; i < 9; i++) {
                 ArrayList<Integer> nums = randNumbers(blankPerRow);
-                for(int j = 0; j < 9; j++) {
-                    if(!nums.contains(j+1)) {
+                for (int j = 0; j < 9; j++) {
+                    if (!nums.contains(j + 1)) {
                         bo.set(i, j, 0);
                     }
                 }
@@ -53,7 +54,7 @@ public class DifficultyLevel {
         Integer[] nums = {1,2,3,4,5,6,7,8,9};
         ArrayList<Integer> temp = new ArrayList<>(Arrays.asList(nums));
         Collections.shuffle(temp);
-        temp.subList(temp.size()-blanks, temp.size()).clear();
+        temp.subList(temp.size() - blanks, temp.size()).clear();
         return temp;
     }
 
