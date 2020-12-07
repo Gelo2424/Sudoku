@@ -75,7 +75,6 @@ public class SudokuFieldTest {
         assertTrue(sudokuField1.compareTo(sudokuField2) < 0);
         sudokuField2.setFieldValue(1);
         assertEquals(sudokuField2.compareTo(sudokuField1), 0);
-
     }
 
 }

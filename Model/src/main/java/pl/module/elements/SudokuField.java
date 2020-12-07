@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 
 
-public class SudokuField implements Serializable, Cloneable, Comparable {
+public class SudokuField implements Serializable, Cloneable, Comparable<SudokuField> {
 
     private int value;
 
@@ -60,8 +60,7 @@ public class SudokuField implements Serializable, Cloneable, Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        SudokuField sf = (SudokuField) o;
+    public int compareTo(SudokuField sf) {
         return this.getFieldValue() - sf.getFieldValue();
     }
 }
