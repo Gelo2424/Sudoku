@@ -7,9 +7,11 @@
 
 <AnchorPane fx:id="mainAnchorPane" prefHeight="481.0" prefWidth="780.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.module.MenuWindowController">
    <children>
-      <Button layoutX="315.0" layoutY="325.0" mnemonicParsing="false" onAction="#startGame" prefHeight="79.0" prefWidth="150.0" text="Start" />
-      <ChoiceBox fx:id="difficultyChoiceBox" layoutX="315.0" layoutY="139.0" prefHeight="46.0" prefWidth="150.0" />
-      <Label layoutX="315.0" layoutY="106.0" prefHeight="33.0" prefWidth="106.0" text="Difficulty:" />
+      <Button layoutX="315.0" layoutY="325.0" mnemonicParsing="false" onAction="#startGame" prefHeight="79.0" prefWidth="150.0" text="%start" />
+      <ChoiceBox fx:id="difficultyChoiceBox" layoutX="29.0" layoutY="156.0" prefHeight="46.0" prefWidth="150.0" />
+      <Label layoutX="29.0" layoutY="123.0" prefHeight="33.0" prefWidth="106.0" text="%chooseDiff" />
       <Label fx:id="difficultyLevel" alignment="CENTER" contentDisplay="CENTER" layoutX="337.0" layoutY="404.0" prefHeight="33.0" prefWidth="106.0" textAlignment="CENTER" />
+      <Label layoutX="29.0" layoutY="14.0" prefHeight="33.0" prefWidth="106.0" text="%chooseLang" />
+      <ChoiceBox fx:id="langChoiceBox" layoutX="29.0" layoutY="47.0" prefHeight="46.0" prefWidth="150.0" />
    </children>
 </AnchorPane>

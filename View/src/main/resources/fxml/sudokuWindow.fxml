@@ -32,7 +32,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
-      <Button layoutX="87.0" layoutY="598.0" mnemonicParsing="false" onAction="#exit" prefHeight="67.0" prefWidth="113.0" text="Menu" />
-      <Button layoutX="474.0" layoutY="598.0" mnemonicParsing="false" onAction="#checkBoard" prefHeight="67.0" prefWidth="113.0" text="Check" />
+      <Button layoutX="87.0" layoutY="598.0" mnemonicParsing="false" onAction="#exit" prefHeight="67.0" prefWidth="113.0" text="%menu" />
+      <Button layoutX="474.0" layoutY="598.0" mnemonicParsing="false" onAction="#checkBoard" prefHeight="67.0" prefWidth="113.0" text="%check" />
    </children>
 </AnchorPane>

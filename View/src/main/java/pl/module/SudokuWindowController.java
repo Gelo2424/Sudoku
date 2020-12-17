@@ -9,7 +9,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-
+import java.util.ResourceBundle;
 
 
 public class SudokuWindowController {
@@ -56,11 +56,9 @@ public class SudokuWindowController {
     }
 
     public void exit() throws IOException {
-
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(this.getClass().getResource("/fxml/menuWindow.fxml"));
+        AnchorPane anchorPane = FXMLLoader.load(this.getClass()
+                .getResource("/fxml/menuWindow.fxml"), ResourceBundle.getBundle("language"));
         Stage stage = new Stage();
-        AnchorPane anchorPane = loader.load();
         Scene scene = new Scene(anchorPane);
         stage.setScene(scene);
         stage.show();

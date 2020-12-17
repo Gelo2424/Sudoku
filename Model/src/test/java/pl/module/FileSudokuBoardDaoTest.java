@@ -11,28 +11,30 @@ public class FileSudokuBoardDaoTest {
     private Dao<SudokuBoard> fileSudokuBoardDao;
 
     @Test
-    public void writeAndReadTest() throws DaoException {
-        fileSudokuBoardDao = SudokuBoardDaoFactory.getFileDao("test.txt");
-        fileSudokuBoardDao.write(board);
-        SudokuBoard board2 = fileSudokuBoardDao.read();
-
-       assertEquals(board, board2);
-    }
-
-    @Test
-    public void readIOExceptionTest() {
-        fileSudokuBoardDao = SudokuBoardDaoFactory.getFileDao("test2");
-        assertThrows(DaoException.class, () -> {
-            fileSudokuBoardDao.read();
-        });
-    }
-
-    @Test
-    public void writeIOExceptionTest() {
-        fileSudokuBoardDao = SudokuBoardDaoFactory.getFileDao("...");
-        assertThrows(DaoException.class, () -> {
+    public void writeAndReadTest() throws Exception {
+        try(Dao<SudokuBoard> fileSudokuBoardDao = SudokuBoardDaoFactory.getFileDao("test.txt")){
             fileSudokuBoardDao.write(board);
-        });
+            SudokuBoard board2 = fileSudokuBoardDao.read();
+            assertEquals(board, board2);
+        }
+    }
+
+    @Test
+    public void readIOExceptionTest()  throws Exception{
+        try(Dao<SudokuBoard> fileSudokuBoardDao = SudokuBoardDaoFactory.getFileDao("test2")){
+            assertThrows(DaoException.class, fileSudokuBoardDao::read);
+        }
+    }
+
+    @Test
+    public void writeIOExceptionTest() throws Exception {
+        try(Dao<SudokuBoard> fileSudokuBoardDao = SudokuBoardDaoFactory.getFileDao("...")){
+            assertThrows(DaoException.class, () -> {
+                fileSudokuBoardDao.write(board);
+            });
+        }
+
+
     }
 
 }
