@@ -68,6 +68,10 @@ public class SudokuBoard implements Serializable, Cloneable {
         return board[x][y].getFieldValue();
     }
 
+    public SudokuField getField(int x, int y) {
+        return board[x][y];
+    }
+
     public void set(int x, int y, int value) {
         board[x][y].setFieldValue(value);
     }

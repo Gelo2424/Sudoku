@@ -32,7 +32,9 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
-      <Button layoutX="87.0" layoutY="598.0" mnemonicParsing="false" onAction="#exit" prefHeight="67.0" prefWidth="113.0" text="%menu" />
-      <Button layoutX="474.0" layoutY="598.0" mnemonicParsing="false" onAction="#checkBoard" prefHeight="67.0" prefWidth="113.0" text="%check" />
+      <Button layoutX="281.0" layoutY="598.0" mnemonicParsing="false" onAction="#exit" prefHeight="67.0" prefWidth="113.0" text="%menu" />
+      <Button layoutX="474.0" layoutY="555.0" mnemonicParsing="false" onAction="#checkBoard" prefHeight="116.0" prefWidth="113.0" text="%check" />
+      <Button layoutX="87.0" layoutY="552.0" mnemonicParsing="false" onAction="#readSudokuBoard" prefHeight="52.0" prefWidth="113.0" text="%read" />
+      <Button layoutX="87.0" layoutY="613.0" mnemonicParsing="false" onAction="#writeSudokuBoard" prefHeight="52.0" prefWidth="113.0" text="%write" />
    </children>
 </AnchorPane>

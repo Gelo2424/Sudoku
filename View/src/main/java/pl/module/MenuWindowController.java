@@ -8,10 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -113,11 +111,17 @@ public class MenuWindowController {
         stage.show();
     }
 
-    public AnchorPane getMainAnchorPane() {
-        return mainAnchorPane;
+    public void showAuthors() {
+        ResourceBundle authorsList = ResourceBundle.getBundle("pl.module.Authors", bundle.getLocale());
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle((String)authorsList.getObject("title"));
+        alert.setContentText(authorsList.getObject("author1") + "\n" + authorsList.getObject("author2"));
+        alert.showAndWait();
     }
 
     public static DifficultyLevel.Difficulty getDifficulty() {
         return difficulty;
     }
+
+
 }
