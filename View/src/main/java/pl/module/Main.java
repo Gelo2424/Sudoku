@@ -25,6 +25,7 @@ public class Main extends Application {
                 .getResource("/fxml/menuWindow.fxml"), bundle);
         Scene scene = new Scene(anchorPane);
         stage.setScene(scene);
+        stage.setTitle(bundle.getString("title"));
         stage.setResizable(false);
         stage.show();
     }

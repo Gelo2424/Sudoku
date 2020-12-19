@@ -14,7 +14,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -36,7 +35,7 @@ public class SudokuWindowController {
     private SudokuBoard sudokuBoard = new SudokuBoard(sudokuSolver);
     private SudokuBoard sudokuBoardCopy = new SudokuBoard(sudokuSolver);
     private SudokuBoard sudokuBoardTemplate = new SudokuBoard(sudokuSolver);
-    private ResourceBundle bundle = ResourceBundle.getBundle("language");
+    private final ResourceBundle bundle = ResourceBundle.getBundle("language");
 
 
     public void initialize() throws CloneNotSupportedException {
@@ -45,10 +44,6 @@ public class SudokuWindowController {
         sudokuBoardCopy = (SudokuBoard) sudokuBoard.clone();
         DifficultyLevel.prepareBoard(sudokuBoardCopy, difficulty);
         sudokuBoardTemplate = (SudokuBoard) sudokuBoardCopy.clone();
-        fillBoard();
-    }
-
-    public void initializeFromFile() throws CloneNotSupportedException {
         fillBoard();
     }
 
@@ -101,28 +96,7 @@ public class SudokuWindowController {
         dao = SudokuBoardDaoFactory.getFileDao(file.toString() + "Solve");
         sudokuBoard = dao.read();
 
-        for(int i = 0; i < 9; i++){
-            for(int j = 0; j < 9; j++){
-                System.out.print(sudokuBoard.get(i,j) + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-        for(int i = 0; i < 9; i++){
-            for(int j = 0; j < 9; j++){
-                System.out.print(sudokuBoardCopy.get(i,j) + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-        for(int i = 0; i < 9; i++){
-            for(int j = 0; j < 9; j++){
-                System.out.print(sudokuBoardTemplate.get(i,j) + " ");
-            }
-            System.out.println();
-        }
-
-        initializeFromFile();
+        fillBoard();
     }
 
     public void writeSudokuBoard() throws DaoException {
