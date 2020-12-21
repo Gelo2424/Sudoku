@@ -1,5 +1,8 @@
 package pl.module;
 
+import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -10,9 +13,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import java.io.IOException;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class MenuWindowController {
 
@@ -26,44 +26,48 @@ public class MenuWindowController {
     public static ResourceBundle bundle;
 
     @FXML
-    public void initialize() {
+    public void initialize() throws IOException {
 
-        difficulties = FXCollections.observableArrayList(
-                bundle.getString("diffLevel01"), bundle.getString("diffLevel02"), bundle.getString("diffLevel03"));
-        languages = FXCollections.observableArrayList(
-                bundle.getString("lang01"), bundle.getString("lang02"));
-
-        difficultyChoiceBox.setValue("");
-        if(bundle.getLocale().equals(new Locale("en"))) {
+        if (bundle.getLocale().equals(new Locale("en"))) {
             langChoiceBox.setValue("english");
-        }
-        else{
+        } else {
             langChoiceBox.setValue("polski");
         }
+
+        difficulties = FXCollections.observableArrayList(
+                bundle.getString("diffLevel01"),
+                bundle.getString("diffLevel02"),
+                bundle.getString("diffLevel03"));
+        languages = FXCollections.observableArrayList(
+                bundle.getString("lang01"),
+                bundle.getString("lang02"));
+
+        difficultyChoiceBox.setValue("");
+
         difficultyChoiceBox.setItems(difficulties);
         langChoiceBox.setItems(languages);
 
-        difficultyChoiceBox.getSelectionModel().selectedIndexProperty().addListener((((observableValue, s, t1) -> {
+        difficultyChoiceBox.getSelectionModel().selectedIndexProperty()
+                .addListener((((observableValue, s, t1) -> {
             if (t1.equals(0)) {
                 difficultyLevel.setText(bundle.getString("diffLevel01"));
                 difficultyLevel.setStyle("-fx-text-fill: #0d880d");
                 difficulty = DifficultyLevel.Difficulty.EASY;
-            }
-            else if (t1.equals(1)) {
+            } else if (t1.equals(1)) {
                 difficultyLevel.setText(bundle.getString("diffLevel02"));
                 difficultyLevel.setStyle("-fx-text-fill: #e5a40d");
                 difficulty = DifficultyLevel.Difficulty.MEDIUM;
-            }
-            else if (t1.equals(2)) {
+            } else if (t1.equals(2)) {
                 difficultyLevel.setText(bundle.getString("diffLevel03"));
                 difficultyLevel.setStyle("-fx-text-fill: #bf0303");
                 difficulty = DifficultyLevel.Difficulty.HARD;
             }
         })));
 
-        langChoiceBox.getSelectionModel().selectedIndexProperty().addListener((((observableValue, s, t1) -> {
+        langChoiceBox.getSelectionModel().selectedIndexProperty()
+                .addListener((((observableValue, s, t1) -> {
             if (t1.equals(0)) {
-                if(bundle.getLocale().equals(new Locale("en"))){
+                if (bundle.getLocale().equals(new Locale("en"))) {
                     try {
                         reload(new Locale("pl"));
                     } catch (IOException e) {
@@ -71,9 +75,8 @@ public class MenuWindowController {
                     }
                 }
 
-            }
-            else if (t1.equals(1)) {
-                if(bundle.getLocale().equals(new Locale("pl"))){
+            } else if (t1.equals(1)) {
+                if (bundle.getLocale().equals(new Locale("pl"))) {
                     try {
                         reload(new Locale("en"));
                     } catch (IOException e) {
@@ -86,12 +89,13 @@ public class MenuWindowController {
     }
 
     public void startGame() throws IOException {
-        if(difficultyChoiceBox.getValue().equals("")) {
+        if (difficultyChoiceBox.getValue().equals("")) {
             DialogBox.showMessage(bundle.getString("noDiffLevel"), Alert.AlertType.WARNING);
             return;
         }
         AnchorPane anchorPane = FXMLLoader.load(this.getClass()
                 .getResource("/fxml/sudokuWindow.fxml"), bundle);
+        SudokuWindowController.bundle = bundle;
         Stage stage = new Stage();
         Scene scene = new Scene(anchorPane);
         scene.getStylesheets().add("/styles/boardStyle.css");
@@ -112,10 +116,12 @@ public class MenuWindowController {
     }
 
     public void showAuthors() {
-        ResourceBundle authorsList = ResourceBundle.getBundle("pl.module.Authors", bundle.getLocale());
+        ResourceBundle authorsList =
+                ResourceBundle.getBundle("pl.module.Authors", bundle.getLocale());
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle((String)authorsList.getObject("title"));
-        alert.setContentText(authorsList.getObject("author1") + "\n" + authorsList.getObject("author2"));
+        alert.setContentText(authorsList.getObject("author1")
+                + "\n" + authorsList.getObject("author2"));
         alert.showAndWait();
     }
 
