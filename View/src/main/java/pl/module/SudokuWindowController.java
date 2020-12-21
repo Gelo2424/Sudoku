@@ -82,42 +82,51 @@ public class SudokuWindowController {
         }
     }
 
-    public void readSudokuBoard() throws DaoException {
+    public void readSudokuBoard() throws Exception {
         fileChooser.setTitle(bundle.getString("chooseFile"));
         File file = fileChooser.showOpenDialog(null);
         if (file == null) {
             return;
         }
-        try {
-            Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(file.toString());
+        try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(file.toString())) {
             sudokuBoardCopy = dao.read();
-            dao = SudokuBoardDaoFactory.getFileDao(file.toString() + "Template");
+        } catch (DaoException e) {
+            throw new DaoException(e);
+        }
+        try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(file.toString() + "Template")) {
             sudokuBoardTemplate = dao.read();
-            dao = SudokuBoardDaoFactory.getFileDao(file.toString() + "Solve");
+        } catch (DaoException e) {
+            throw new DaoException(e);
+        }
+        try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(file.toString() + "Solve")) {
             sudokuBoard = dao.read();
         } catch (DaoException e) {
             throw new DaoException(e);
         }
+
         fillBoard();
     }
 
-    public void writeSudokuBoard() throws DaoException {
+    public void writeSudokuBoard() throws Exception {
         fileChooser.setTitle(bundle.getString("writeFile"));
         File file = fileChooser.showSaveDialog(null);
         if (file == null) {
             return;
         }
-        try {
-            Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(file.toString());
+        try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(file.toString())) {
             dao.write(sudokuBoardCopy);
-
-            dao = SudokuBoardDaoFactory.getFileDao(file.toString() + "Template");
+        } catch (DaoException e) {
+            throw new DaoException(e);
+        }
+        try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(file.toString() + "Template")) {
             dao.write(sudokuBoardTemplate);
-            setHiddenAttrib(Paths.get(file.toString() + "Template"));
-
-            dao = SudokuBoardDaoFactory.getFileDao(file.toString() + "Solve");
+            //setHiddenAttrib(Paths.get(file.toString() + "Template"));
+        } catch (DaoException e) {
+            throw new DaoException(e);
+        }
+        try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(file.toString() + "Solve")) {
             dao.write(sudokuBoard);
-            setHiddenAttrib(Paths.get(file.toString() + "Solve"));
+            //setHiddenAttrib(Paths.get(file.toString() + "Solve"));
         } catch (DaoException e) {
             throw new DaoException(e);
         }
