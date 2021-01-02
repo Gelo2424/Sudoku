@@ -2,10 +2,6 @@ package pl.module;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.DosFileAttributes;
 import java.util.ResourceBundle;
 import javafx.beans.property.adapter.JavaBeanIntegerProperty;
 import javafx.beans.property.adapter.JavaBeanIntegerPropertyBuilder;
@@ -13,13 +9,18 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.module.exceptions.FxmlNotFoundException;
+import pl.module.exceptions.ReadFileException;
+import pl.module.exceptions.WriteFileException;
 
 public class SudokuWindowController {
 
@@ -27,6 +28,7 @@ public class SudokuWindowController {
     public GridPane gridPane;
     public AnchorPane mainAnchorPane;
 
+    private static final Logger logger = LoggerFactory.getLogger(MenuWindowController.class.getName());
     private final FileChooser fileChooser = new FileChooser();
     private final SudokuSolver sudokuSolver = new BacktrackingSudokuSolver();
     private static DifficultyLevel.Difficulty difficulty;
@@ -36,8 +38,9 @@ public class SudokuWindowController {
     public static ResourceBundle bundle;
 
 
-    public void initialize() throws CloneNotSupportedException {
+    public void initialize() throws CloneNotSupportedException, IOException {
         difficulty = MenuWindowController.getDifficulty();
+        logger.info("Board with " + difficulty.toString() + " difficulty is loading");
         sudokuBoard.solveGame();
         sudokuBoardCopy = (SudokuBoard) sudokuBoard.clone();
         DifficultyLevel.prepareBoard(sudokuBoardCopy, difficulty);
@@ -45,7 +48,7 @@ public class SudokuWindowController {
         fillBoard();
     }
 
-    private void fillBoard() {
+    private void fillBoard() throws IOException {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 NumberTextField textField = new NumberTextField();
@@ -61,9 +64,10 @@ public class SudokuWindowController {
                     textField.textProperty().bindBidirectional(integerProperty, converter);
 
                 } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
+                    logger.error("Cant bind field (" + i + ", " + j + ")");
+                    DialogBox.showMessage("Cant fill board... Returning to menu", Alert.AlertType.ERROR);
+                    exit();
                 }
-
                 textField.setAlignment(Pos.CENTER);
                 if (sudokuBoardTemplate.get(i, j) != 0) {
                     textField.setDisable(true);
@@ -75,7 +79,6 @@ public class SudokuWindowController {
                     textField.setDisable(false);
                 } else {
                     textField.setText("");
-
                 }
                 gridPane.add(textField, j, i);
             }
@@ -90,18 +93,22 @@ public class SudokuWindowController {
         }
         try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(file.toString())) {
             sudokuBoardCopy = dao.read();
-        } catch (DaoException e) {
-            throw new DaoException(e);
+        } catch (ReadFileException | IOException e) {
+            logger.warn(e.getMessage());
+            DialogBox.showMessage("Cant load sudoku", Alert.AlertType.WARNING);
         }
         try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(file.toString() + "Template")) {
             sudokuBoardTemplate = dao.read();
-        } catch (DaoException e) {
-            throw new DaoException(e);
+        } catch (ReadFileException e) {
+            logger.warn(e.getMessage() + ". Cant find template");
+            DialogBox.showMessage("Cant load sudoku", Alert.AlertType.WARNING);
         }
         try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(file.toString() + "Solve")) {
             sudokuBoard = dao.read();
-        } catch (DaoException e) {
-            throw new DaoException(e);
+        } catch (ReadFileException e) {
+            logger.warn(e.getMessage() + ". Cant find solve");
+            DialogBox.showMessage("Cant load sudoku", Alert.AlertType.WARNING);
+
         }
 
         fillBoard();
@@ -115,32 +122,35 @@ public class SudokuWindowController {
         }
         try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(file.toString())) {
             dao.write(sudokuBoardCopy);
-        } catch (DaoException e) {
-            throw new DaoException(e);
+        } catch (WriteFileException e) {
+            logger.warn(e.getMessage());
+            DialogBox.showMessage("Cant write sudoku", Alert.AlertType.WARNING);
         }
         try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(file.toString() + "Template")) {
             dao.write(sudokuBoardTemplate);
             //setHiddenAttrib(Paths.get(file.toString() + "Template"));
-        } catch (DaoException e) {
-            throw new DaoException(e);
+        } catch (WriteFileException e) {
+            logger.warn(e.getMessage() + ". Cant write template");
+            DialogBox.showMessage("Cant write sudoku", Alert.AlertType.WARNING);
         }
         try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(file.toString() + "Solve")) {
             dao.write(sudokuBoard);
             //setHiddenAttrib(Paths.get(file.toString() + "Solve"));
-        } catch (DaoException e) {
-            throw new DaoException(e);
+        } catch (WriteFileException e) {
+            logger.warn(e.getMessage() + ". Cant write solve");
+            DialogBox.showMessage("Cant write sudoku", Alert.AlertType.WARNING);
         }
 
     }
 
-    private static void setHiddenAttrib(Path filePath) throws DaoException {
-        try {
-            DosFileAttributes attr = Files.readAttributes(filePath, DosFileAttributes.class);
-            Files.setAttribute(filePath, "dos:hidden", true);
-        } catch (IOException e) {
-            throw new DaoException(e);
-        }
-    }
+//    private static void setHiddenAttrib(Path filePath) throws DaoException {
+//        try {
+//            DosFileAttributes attr = Files.readAttributes(filePath, DosFileAttributes.class);
+//            Files.setAttribute(filePath, "dos:hidden", true);
+//        } catch (IOException e) {
+//            throw new DaoException(e);
+//        }
+//    }
 
     public void checkBoard() {
 
@@ -148,17 +158,22 @@ public class SudokuWindowController {
 
     }
 
-    public void exit() throws IOException {
-        AnchorPane anchorPane = FXMLLoader.load(this.getClass()
-                .getResource("/fxml/menuWindow.fxml"),
-                ResourceBundle.getBundle("language", bundle.getLocale()));
-
+    public void exit() throws FxmlNotFoundException {
+        AnchorPane anchorPane = null;
+        try {
+            anchorPane = FXMLLoader.load(this.getClass()
+                            .getResource("/fxml/menuWindow.fxml"),
+                    ResourceBundle.getBundle("language", bundle.getLocale()));
+        } catch (IOException e) {
+            logger.error("Cant load menuWindow.fxml");
+            throw new FxmlNotFoundException("Cant load FXML file", e);
+        }
         Stage stage = new Stage();
         Scene scene = new Scene(anchorPane);
         stage.setScene(scene);
         stage.show();
         mainAnchorPane.getScene().getWindow().hide();
-
+        logger.info("Returning to menu");
     }
 
 }

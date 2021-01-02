@@ -8,11 +8,15 @@ import javafx.stage.Stage;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Main extends Application {
 
+    static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(final String[] args) {
+        logger.info("Aplication is starting");
         launch(args);
     }
 

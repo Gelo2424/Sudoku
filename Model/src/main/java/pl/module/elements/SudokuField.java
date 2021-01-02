@@ -4,7 +4,7 @@ import java.io.Serializable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
+import pl.module.exceptions.WrongValueException;
 
 
 public class SudokuField implements Serializable, Cloneable, Comparable<SudokuField> {
@@ -25,7 +25,7 @@ public class SudokuField implements Serializable, Cloneable, Comparable<SudokuFi
 
     public void setFieldValue(int value) {
         if (value < 0 || value > 9) {
-            throw new IllegalArgumentException("Invalid number. Valid Range<0-9>");
+            throw new WrongValueException("Invalid number. Valid Range<0-9>");
         }
         this.value = value;
     }

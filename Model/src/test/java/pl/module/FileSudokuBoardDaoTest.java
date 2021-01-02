@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
+import pl.module.exceptions.ReadFileException;
+import pl.module.exceptions.WriteFileException;
 
 public class FileSudokuBoardDaoTest {
 
@@ -22,14 +24,14 @@ public class FileSudokuBoardDaoTest {
     @Test
     public void readIOExceptionTest()  throws Exception{
         try(Dao<SudokuBoard> fileSudokuBoardDao = SudokuBoardDaoFactory.getFileDao("test2")){
-            assertThrows(DaoException.class, fileSudokuBoardDao::read);
+            assertThrows(ReadFileException.class, fileSudokuBoardDao::read);
         }
     }
 
     @Test
     public void writeIOExceptionTest() throws Exception {
         try(Dao<SudokuBoard> fileSudokuBoardDao = SudokuBoardDaoFactory.getFileDao("...")){
-            assertThrows(DaoException.class, () -> {
+            assertThrows(WriteFileException.class, () -> {
                 fileSudokuBoardDao.write(board);
             });
         }

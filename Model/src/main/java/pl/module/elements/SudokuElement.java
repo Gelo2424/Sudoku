@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import pl.module.SudokuBoard;
+import pl.module.exceptions.WrongSizeException;
 
 
 public class SudokuElement implements Serializable, Cloneable {
@@ -13,7 +14,7 @@ public class SudokuElement implements Serializable, Cloneable {
 
     public SudokuElement(List<SudokuField> element) {
         if (element.size() != SudokuBoard.SIZE) {
-            throw new IllegalArgumentException("Wrong size. Must be " + SudokuBoard.SIZE);
+            throw new WrongSizeException("Wrong size. Must be " + SudokuBoard.SIZE);
         }
         this.element = element;
     }

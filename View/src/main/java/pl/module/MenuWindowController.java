@@ -13,9 +13,14 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class MenuWindowController {
 
+    private static final Logger logger
+            = LoggerFactory.getLogger(MenuWindowController.class.getName());
     private static DifficultyLevel.Difficulty difficulty;
     private ObservableList<String> difficulties;
     private ObservableList<String> languages;
@@ -53,14 +58,17 @@ public class MenuWindowController {
                 difficultyLevel.setText(bundle.getString("diffLevel01"));
                 difficultyLevel.setStyle("-fx-text-fill: #0d880d");
                 difficulty = DifficultyLevel.Difficulty.EASY;
+                logger.info("Difficulty: easy was chosen");
             } else if (t1.equals(1)) {
                 difficultyLevel.setText(bundle.getString("diffLevel02"));
                 difficultyLevel.setStyle("-fx-text-fill: #e5a40d");
                 difficulty = DifficultyLevel.Difficulty.MEDIUM;
+                logger.info("Difficulty: medium was chosen");
             } else if (t1.equals(2)) {
                 difficultyLevel.setText(bundle.getString("diffLevel03"));
                 difficultyLevel.setStyle("-fx-text-fill: #bf0303");
                 difficulty = DifficultyLevel.Difficulty.HARD;
+                logger.info("Difficulty: hard was chosen");
             }
         })));
 
@@ -89,8 +97,11 @@ public class MenuWindowController {
     }
 
     public void startGame() throws IOException {
+        logger.info("Game is starting");
         if (difficultyChoiceBox.getValue().equals("")) {
+            logger.warn("Difficulty wasnt chosen");
             DialogBox.showMessage(bundle.getString("noDiffLevel"), Alert.AlertType.WARNING);
+            logger.info("Returning to menu");
             return;
         }
         AnchorPane anchorPane = FXMLLoader.load(this.getClass()
@@ -105,6 +116,7 @@ public class MenuWindowController {
     }
 
     public void reload(Locale loc) throws IOException {
+        logger.info("Reloading with " + loc.toLanguageTag() + " language");
         bundle = ResourceBundle.getBundle("language", loc);
         AnchorPane anchorPane = FXMLLoader.load(this.getClass()
                 .getResource("/fxml/menuWindow.fxml"), bundle);
@@ -116,6 +128,7 @@ public class MenuWindowController {
     }
 
     public void showAuthors() {
+        logger.info("Opening author window");
         ResourceBundle authorsList =
                 ResourceBundle.getBundle("pl.module.Authors", bundle.getLocale());
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -123,6 +136,7 @@ public class MenuWindowController {
         alert.setContentText(authorsList.getObject("author1")
                 + "\n" + authorsList.getObject("author2"));
         alert.showAndWait();
+        logger.info("Closing author window");
     }
 
     public static DifficultyLevel.Difficulty getDifficulty() {

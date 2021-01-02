@@ -17,34 +17,22 @@ public class DifficultyLevel {
         int size = SudokuBoard.SIZE;
         int cells = size * 9;
 
+        double howManyBlanks;
+
         if (difficulty == Difficulty.EASY) {
-            int blankPerRow = (int)((cells * 0.30) / size);
-            for (int i = 0; i < 9; i++) {
-                ArrayList<Integer> nums = randNumbers(blankPerRow);
-                for (int j = 0; j < 9; j++) {
-                    if (!nums.contains(j + 1)) {
-                        bo.set(i, j, 0);
-                    }
-                }
-            }
+            howManyBlanks = 0.30;
         } else if (difficulty == Difficulty.MEDIUM) {
-            int blankPerRow = (int)((cells * 0.50) / size);
-            for (int i = 0; i < 9; i++) {
-                ArrayList<Integer> nums = randNumbers(blankPerRow);
-                for (int j = 0; j < 9; j++) {
-                    if (!nums.contains(j + 1)) {
-                        bo.set(i, j, 0);
-                    }
-                }
-            }
+            howManyBlanks = 0.50;
         } else {
-            int blankPerRow = (int)((cells * 0.70) / size);
-            for (int i = 0; i < 9; i++) {
-                ArrayList<Integer> nums = randNumbers(blankPerRow);
-                for (int j = 0; j < 9; j++) {
-                    if (!nums.contains(j + 1)) {
-                        bo.set(i, j, 0);
-                    }
+            howManyBlanks = 0.70;
+        }
+
+        int blankPerRow = (int)((cells * howManyBlanks) / size);
+        for (int i = 0; i < 9; i++) {
+            ArrayList<Integer> nums = randNumbers(blankPerRow);
+            for (int j = 0; j < 9; j++) {
+                if (!nums.contains(j + 1)) {
+                    bo.set(i, j, 0);
                 }
             }
         }
