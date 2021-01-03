@@ -3,8 +3,11 @@ package pl.module;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
+
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,8 +16,10 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.module.exceptions.FxmlException;
 
 
 public class MenuWindowController {
@@ -31,7 +36,7 @@ public class MenuWindowController {
     public static ResourceBundle bundle;
 
     @FXML
-    public void initialize() throws IOException {
+    public void initialize() {
 
         if (bundle.getLocale().equals(new Locale("en"))) {
             langChoiceBox.setValue("english");
@@ -96,7 +101,7 @@ public class MenuWindowController {
 
     }
 
-    public void startGame() throws IOException {
+    public void startGame() throws FxmlException {
         logger.info("Game is starting");
         if (difficultyChoiceBox.getValue().equals("")) {
             logger.warn("Difficulty wasnt chosen");
@@ -104,10 +109,24 @@ public class MenuWindowController {
             logger.info("Returning to menu");
             return;
         }
-        AnchorPane anchorPane = FXMLLoader.load(this.getClass()
-                .getResource("/fxml/sudokuWindow.fxml"), bundle);
+        AnchorPane anchorPane = null;
+        try{
+            anchorPane = FXMLLoader.load(this.getClass()
+                    .getResource("/fxml/sudokuWindow.fxml"), bundle);
+        } catch(IOException e) {
+            logger.error("Cant open sudokuWindow.fxml");
+            throw new FxmlException("Cant open sudokuWindow.fxml", e);
+        }
         SudokuWindowController.bundle = bundle;
         Stage stage = new Stage();
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                logger.info("Closing application");
+                Platform.exit();
+            }
+        });
+
         Scene scene = new Scene(anchorPane);
         scene.getStylesheets().add("/styles/boardStyle.css");
         stage.setScene(scene);
@@ -115,12 +134,25 @@ public class MenuWindowController {
         mainAnchorPane.getScene().getWindow().hide();
     }
 
-    public void reload(Locale loc) throws IOException {
+    public void reload(Locale loc) throws FxmlException {
         logger.info("Reloading with " + loc.toLanguageTag() + " language");
         bundle = ResourceBundle.getBundle("language", loc);
-        AnchorPane anchorPane = FXMLLoader.load(this.getClass()
-                .getResource("/fxml/menuWindow.fxml"), bundle);
+        AnchorPane anchorPane = null;
+        try{
+            anchorPane = FXMLLoader.load(this.getClass()
+                    .getResource("/fxml/menuWindow.fxml"), bundle);
+        } catch(IOException e) {
+            logger.error("Cant reload menuWindow");
+            throw new FxmlException("Cant reload menuWindow", e);
+        }
         Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                logger.info("Closing application");
+                Platform.exit();
+            }
+        });
         Scene scene = new Scene(anchorPane);
         scene.getStylesheets().add("/styles/boardStyle.css");
         stage.setScene(scene);
