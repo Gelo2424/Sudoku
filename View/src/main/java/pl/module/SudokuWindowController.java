@@ -70,7 +70,7 @@ public class SudokuWindowController {
 
                 } catch (NoSuchMethodException e) {
                     logger.error("Cant bind field (" + i + ", " + j + ")");
-                    DialogBox.showMessage("Cant fill board... Returning to menu", Alert.AlertType.ERROR);
+                    DialogBox.showMessage(bundle.getString("errorFillBoard"), Alert.AlertType.ERROR);
                     exit();
                 }
                 textField.setAlignment(Pos.CENTER);
@@ -105,21 +105,21 @@ public class SudokuWindowController {
             readBoard = dao.read();
         } catch (Exception e) {
             logger.warn(e.getMessage());
-            DialogBox.showMessage("Cant load sudoku", Alert.AlertType.WARNING);
+            DialogBox.showMessage(bundle.getString("errorLoad"), Alert.AlertType.WARNING);
             return;
         }
         try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(file.toString() + "Template")) {
             readTemplate = dao.read();
         } catch (Exception e) {
             logger.warn(e.getMessage() + ". Cant find template");
-            DialogBox.showMessage("Cant load sudoku", Alert.AlertType.WARNING);
+            DialogBox.showMessage(bundle.getString("errorLoad"), Alert.AlertType.WARNING);
             return;
         }
         try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(file.toString() + "Solve")) {
             readSolve = dao.read();
         } catch (Exception e) {
             logger.warn(e.getMessage() + ". Cant find solve");
-            DialogBox.showMessage("Cant load sudoku", Alert.AlertType.WARNING);
+            DialogBox.showMessage(bundle.getString("errorLoad"), Alert.AlertType.WARNING);
             return;
         }
         logger.info("Sudoku has been loaded");
@@ -141,21 +141,21 @@ public class SudokuWindowController {
             dao.write(sudokuBoardCopy);
         } catch (Exception e) {
             logger.warn(e.getMessage());
-            DialogBox.showMessage("Cant write sudoku", Alert.AlertType.WARNING);
+            DialogBox.showMessage(bundle.getString("errorWrite"), Alert.AlertType.WARNING);
         }
         try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(file.toString() + "Template")) {
             dao.write(sudokuBoardTemplate);
             //setHiddenAttrib(Paths.get(file.toString() + "Template"));
         } catch (Exception e) {
             logger.warn(e.getMessage() + ". Cant write template");
-            DialogBox.showMessage("Cant write sudoku", Alert.AlertType.WARNING);
+            DialogBox.showMessage(bundle.getString("errorWrite"), Alert.AlertType.WARNING);
         }
         try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(file.toString() + "Solve")) {
             dao.write(sudokuBoard);
             //setHiddenAttrib(Paths.get(file.toString() + "Solve"));
         } catch (Exception e) {
             logger.warn(e.getMessage() + ". Cant write solve");
-            DialogBox.showMessage("Cant write sudoku", Alert.AlertType.WARNING);
+            DialogBox.showMessage(bundle.getString("errorWrite"), Alert.AlertType.WARNING);
         }
         logger.info("Sudoku has been written");
     }
