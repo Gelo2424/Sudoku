@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.beans.property.adapter.JavaBeanIntegerProperty;
 import javafx.beans.property.adapter.JavaBeanIntegerPropertyBuilder;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,9 +23,7 @@ import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.module.exceptions.FxmlException;
-import pl.module.exceptions.ReadFileException;
-import pl.module.exceptions.WriteFileException;
+import pl.module.exceptions.*;
 
 public class SudokuWindowController {
 
@@ -160,14 +159,33 @@ public class SudokuWindowController {
         logger.info("Sudoku has been written");
     }
 
-//    private static void setHiddenAttrib(Path filePath) throws DaoException {
-//        try {
-//            DosFileAttributes attr = Files.readAttributes(filePath, DosFileAttributes.class);
-//            Files.setAttribute(filePath, "dos:hidden", true);
-//        } catch (IOException e) {
-//            throw new DaoException(e);
-//        }
-//    }
+    public void readFromDatabase() {
+        JdbcSudokuBoardDao.numOfBoard = 0;
+        try {
+            Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getJdbcDao("board2");
+            logger.info("Connecting to databse");
+            sudokuBoardCopy = dao.read();
+            sudokuBoardTemplate = dao.read();
+            sudokuBoard = dao.read();
+            fillBoard();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void writeToDatabase() {
+        JdbcSudokuBoardDao.numOfBoard = 0;
+        try {
+            Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getJdbcDao("board2");
+            logger.info("Connecting to databse");
+            dao.write(sudokuBoardCopy);
+            dao.write(sudokuBoardTemplate);
+            dao.write(sudokuBoard);
+        } catch (DaoException e) {
+            logger.warn("Cant read sudoku from database");
+            e.printStackTrace();
+        }
+    }
 
     public void checkBoard() {
         logger.info("Checking sudoku");
@@ -199,5 +217,6 @@ public class SudokuWindowController {
         mainAnchorPane.getScene().getWindow().hide();
         logger.info("Returning to menu");
     }
+
 
 }
