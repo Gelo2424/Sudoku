@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -32,9 +33,13 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
-      <Button layoutX="281.0" layoutY="598.0" mnemonicParsing="false" onAction="#exit" prefHeight="67.0" prefWidth="113.0" text="%menu" />
+      <Button layoutX="344.0" layoutY="557.0" mnemonicParsing="false" onAction="#exit" prefHeight="116.0" prefWidth="113.0" text="%menu" />
       <Button layoutX="474.0" layoutY="555.0" mnemonicParsing="false" onAction="#checkBoard" prefHeight="116.0" prefWidth="113.0" text="%check" />
       <Button layoutX="87.0" layoutY="552.0" mnemonicParsing="false" onAction="#readSudokuBoard" prefHeight="52.0" prefWidth="113.0" text="%read" />
       <Button layoutX="87.0" layoutY="613.0" mnemonicParsing="false" onAction="#writeSudokuBoard" prefHeight="52.0" prefWidth="113.0" text="%write" />
+      <Button layoutX="211.0" layoutY="614.0" mnemonicParsing="false" onAction="#writeToDatabase" prefHeight="52.0" prefWidth="113.0" text="%write" />
+      <Button layoutX="211.0" layoutY="552.0" mnemonicParsing="false" onAction="#readFromDatabase" prefHeight="52.0" prefWidth="113.0" text="%read" />
+      <Label layoutX="87.0" layoutY="528.0" prefHeight="24.0" prefWidth="113.0" text="%fileOperation" />
+      <Label layoutX="211.0" layoutY="528.0" prefHeight="24.0" prefWidth="113.0" text="%dbOperation" />
    </children>
 </AnchorPane>
