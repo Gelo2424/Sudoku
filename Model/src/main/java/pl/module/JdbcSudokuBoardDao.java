@@ -1,13 +1,10 @@
 package pl.module;
 
-import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import pl.module.exceptions.DaoException;
 import pl.module.exceptions.JdbcException;
 
 
@@ -159,12 +156,7 @@ public class JdbcSudokuBoardDao implements Dao<SudokuBoard> {
                 throw new JdbcException(e);
             }
         }
-
-
-
     }
-
-
 
     @Override
     public void close() throws Exception {

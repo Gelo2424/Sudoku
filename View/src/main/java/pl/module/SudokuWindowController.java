@@ -2,11 +2,17 @@ package pl.module;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Observable;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
 import javafx.beans.property.adapter.JavaBeanIntegerProperty;
 import javafx.beans.property.adapter.JavaBeanIntegerPropertyBuilder;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -14,6 +20,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
@@ -30,19 +38,24 @@ public class SudokuWindowController {
     @FXML
     public GridPane gridPane;
     public AnchorPane mainAnchorPane;
+    public ChoiceBox<String> nameChoiceBox;
+    public TextField nameForSave;
+    private ObservableList<String> names;
+
 
     private static final Logger logger = LoggerFactory.getLogger(MenuWindowController.class.getName());
     private final FileChooser fileChooser = new FileChooser();
     private final SudokuSolver sudokuSolver = new BacktrackingSudokuSolver();
     private static DifficultyLevel.Difficulty difficulty;
+
+
     private SudokuBoard sudokuBoard = new SudokuBoard(sudokuSolver);
     private SudokuBoard sudokuBoardCopy = new SudokuBoard(sudokuSolver);
     private SudokuBoard sudokuBoardTemplate = new SudokuBoard(sudokuSolver);
     public static ResourceBundle bundle;
 
 
-    public void initialize() throws CloneNotSupportedException, FxmlException {
-
+    public void initialize() throws CloneNotSupportedException, FxmlException, JdbcException {
         difficulty = MenuWindowController.getDifficulty();
         logger.info("Board with " + difficulty.toString() + " difficulty is loading");
         sudokuBoard.solveGame();
@@ -50,6 +63,30 @@ public class SudokuWindowController {
         DifficultyLevel.prepareBoard(sudokuBoardCopy, difficulty);
         sudokuBoardTemplate = (SudokuBoard) sudokuBoardCopy.clone();
         fillBoard();
+
+        String url = "jdbc:postgresql://localhost/Sudoku";
+        String username = "postgres";
+        String password = "qwerty";
+        Connection connection;
+        try {
+            connection = DriverManager.getConnection(url, username, password);
+        } catch (SQLException e) {
+            throw new JdbcException(e);
+        }
+
+        ArrayList<String> namesDB = new ArrayList<>();
+        String getBoards = "select sudokuname from boards";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(getBoards)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                String name = resultSet.getString(1);
+                namesDB.add(name);
+            }
+        } catch (SQLException e) {
+            throw new JdbcException(e);
+        }
+        names = FXCollections.observableArrayList(namesDB);
+        nameChoiceBox.setItems(names);
     }
 
     private void fillBoard() throws FxmlException {
@@ -161,29 +198,41 @@ public class SudokuWindowController {
 
     public void readFromDatabase() {
         JdbcSudokuBoardDao.numOfBoard = 0;
-        try {
-            Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getJdbcDao("board2");
+        String nameOfGame = nameChoiceBox.getSelectionModel().getSelectedItem();
+        if(nameOfGame == null || nameOfGame.equals("")) {
+            DialogBox.showMessage(bundle.getString("databaseErrorReadingName"), Alert.AlertType.WARNING);
+            return;
+        }
+        try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getJdbcDao(nameOfGame)){
             logger.info("Connecting to databse");
             sudokuBoardCopy = dao.read();
             sudokuBoardTemplate = dao.read();
             sudokuBoard = dao.read();
+            logger.info("Sudoku has been loaded");
             fillBoard();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("Cant read sudoku from database");
+            DialogBox.showMessage(bundle.getString("databaseErrorReading"), Alert.AlertType.WARNING);
         }
     }
 
     public void writeToDatabase() {
         JdbcSudokuBoardDao.numOfBoard = 0;
-        try {
-            Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getJdbcDao("board2");
+        String nameOfGame = nameForSave.getText();
+        try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getJdbcDao(nameOfGame)){
             logger.info("Connecting to databse");
             dao.write(sudokuBoardCopy);
             dao.write(sudokuBoardTemplate);
             dao.write(sudokuBoard);
-        } catch (DaoException e) {
-            logger.warn("Cant read sudoku from database");
-            e.printStackTrace();
+
+        } catch (Exception e) {
+            logger.warn("Cant write sudoku to database");
+            if(e.toString().contains("duplicate key")) {
+                logger.warn("Duplicate name of sudoku");
+                DialogBox.showMessage(bundle.getString("databaseDuplicateKey"), Alert.AlertType.WARNING);
+                return;
+            }
+            DialogBox.showMessage(bundle.getString("databaseErrorWriting"), Alert.AlertType.WARNING);
         }
     }
 
@@ -213,6 +262,7 @@ public class SudokuWindowController {
         });
         Scene scene = new Scene(anchorPane);
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
         mainAnchorPane.getScene().getWindow().hide();
         logger.info("Returning to menu");

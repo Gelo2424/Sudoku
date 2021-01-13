@@ -11,6 +11,15 @@
     -fx-font-weight: bold;
 }
 
+#textFieldGameName {
+    -fx-background-color: #fff;
+    -fx-border-insets: 1px;
+    -fx-background-insets: 1px;
+    -fx-pref-width: 110px;
+    -fx-pref-height: 32px;
+    -fx-font-size: 15px;
+}
+
 #cell {
     -fx-font-weight: NORMAL;
     -fx-text-fill: grey;

@@ -130,6 +130,7 @@ public class MenuWindowController {
         Scene scene = new Scene(anchorPane);
         scene.getStylesheets().add("/styles/boardStyle.css");
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
         mainAnchorPane.getScene().getWindow().hide();
     }
