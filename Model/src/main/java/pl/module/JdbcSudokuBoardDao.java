@@ -20,6 +20,7 @@ public class JdbcSudokuBoardDao implements Dao<SudokuBoard> {
     public JdbcSudokuBoardDao(String name) throws JdbcException {
         this.name = name;
         connection = prepareConnection();
+        numOfBoard = 0;
     }
 
     private Connection prepareConnection() throws JdbcException {
@@ -35,37 +36,40 @@ public class JdbcSudokuBoardDao implements Dao<SudokuBoard> {
     @Override
     public SudokuBoard read() throws JdbcException {
         SudokuBoard sudokuBoard = new SudokuBoard(new BacktrackingSudokuSolver());
-        int ID = 0;
+        int id = 0;
         String getBoardId = "select id from boards where sudokuname=?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(getBoardId)) {
             preparedStatement.setString(1, name);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                ID = resultSet.getInt(1);
+                id = resultSet.getInt(1);
+            }
+            if (id == 0) {
+                throw new SQLException("Cant find board");
             }
         } catch (SQLException e) {
             throw new JdbcException(e);
         }
-
-        String insertBoard = "select value, solvedvalue, iseditable from fields where boardid=? and x=? and y=?";
+        String insertBoard =
+                "select value, solvedvalue, iseditable from fields where boardid=? and x=? and y=?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertBoard)) {
-            for(int i = 0; i < 9; i++) {
-                for(int j = 0; j < 9; j++) {
-                    preparedStatement.setInt(1, ID);
+            for (int i = 0; i < 9; i++) {
+                for (int j = 0; j < 9; j++) {
+                    preparedStatement.setInt(1, id);
                     preparedStatement.setInt(2, i);
                     preparedStatement.setInt(3, j);
                     ResultSet resultSet = preparedStatement.executeQuery();
                     if (resultSet.next()) {
-                        if(numOfBoard == 0) {
+                        if (numOfBoard == 0) {
                             sudokuBoard.set(i, j, resultSet.getInt(1));
 
-                        } else if(numOfBoard == 1) {
-                            if(resultSet.getBoolean(3)) {
+                        } else if (numOfBoard == 1) {
+                            if (resultSet.getBoolean(3)) {
                                 sudokuBoard.set(i, j, 0);
                             } else {
                                 sudokuBoard.set(i, j, resultSet.getInt(2));
                             }
-                        } else if(numOfBoard == 2) {
+                        } else if (numOfBoard == 2) {
                             sudokuBoard.set(i, j, resultSet.getInt(2));
                         }
                     }
@@ -82,7 +86,7 @@ public class JdbcSudokuBoardDao implements Dao<SudokuBoard> {
 
     @Override
     public void write(SudokuBoard obj) throws JdbcException {
-        if(numOfBoard == 0) {
+        if (numOfBoard == 0) {
             String insertBoard = "insert into boards(sudokuname) values(?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertBoard)) {
                 preparedStatement.setString(1, name);
@@ -92,24 +96,26 @@ public class JdbcSudokuBoardDao implements Dao<SudokuBoard> {
             }
         }
 
-        int ID = 0;
+        int id = 0;
         String getBoardId = "select id from boards where sudokuname=?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(getBoardId)) {
             preparedStatement.setString(1, name);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                ID = resultSet.getInt(1);
+                id = resultSet.getInt(1);
             }
         } catch (SQLException e) {
             throw new JdbcException(e);
         }
 
-        if(numOfBoard == 0) {
-            String insertFields = "insert into fields(boardid, value, x, y, solvedvalue, iseditable) values(?, ?, ?, ?, ?, ?)";
+        if (numOfBoard == 0) {
+            String insertFields =
+                    "insert into fields(boardid, value, x, y, solvedvalue, iseditable)"
+                            + " values(?, ?, ?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertFields)) {
-                for(int i = 0; i < 9; i++) {
-                    for(int j = 0; j < 9; j++) {
-                        preparedStatement.setInt(1, ID);
+                for (int i = 0; i < 9; i++) {
+                    for (int j = 0; j < 9; j++) {
+                        preparedStatement.setInt(1, id);
                         preparedStatement.setInt(2, obj.get(i, j));
                         preparedStatement.setInt(3, i);
                         preparedStatement.setInt(4, j);
@@ -122,13 +128,15 @@ public class JdbcSudokuBoardDao implements Dao<SudokuBoard> {
             } catch (SQLException e) {
                 throw new JdbcException(e);
             }
-        } else if(numOfBoard == 1) {
-            String insertFields = "update fields set iseditable = true where boardid = ? and x = ? and y = ?";
+        } else if (numOfBoard == 1) {
+            String insertFields =
+                    "update fields set iseditable = true where boardid = ? "
+                            + "and x = ? and y = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertFields)) {
-                for(int i = 0; i < 9; i++) {
-                    for(int j = 0; j < 9; j++) {
-                        if(obj.get(i, j) == 0) {
-                            preparedStatement.setInt(1, ID);
+                for (int i = 0; i < 9; i++) {
+                    for (int j = 0; j < 9; j++) {
+                        if (obj.get(i, j) == 0) {
+                            preparedStatement.setInt(1, id);
                             preparedStatement.setInt(2, i);
                             preparedStatement.setInt(3, j);
                             preparedStatement.executeUpdate();
@@ -139,13 +147,15 @@ public class JdbcSudokuBoardDao implements Dao<SudokuBoard> {
             } catch (SQLException e) {
                 throw new JdbcException(e);
             }
-        } else if(numOfBoard == 2) {
-            String insertFields = "update fields set solvedvalue = ? where boardid = ? and x = ? and y = ?";
+        } else if (numOfBoard == 2) {
+            String insertFields =
+                    "update fields set solvedvalue = ? where boardid = ? "
+                            + "and x = ? and y = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertFields)) {
-                for(int i = 0; i < 9; i++) {
-                    for(int j = 0; j < 9; j++) {
+                for (int i = 0; i < 9; i++) {
+                    for (int j = 0; j < 9; j++) {
                         preparedStatement.setInt(1, obj.get(i, j));
-                        preparedStatement.setInt(2, ID);
+                        preparedStatement.setInt(2, id);
                         preparedStatement.setInt(3, i);
                         preparedStatement.setInt(4, j);
                         preparedStatement.executeUpdate();
@@ -155,6 +165,37 @@ public class JdbcSudokuBoardDao implements Dao<SudokuBoard> {
             } catch (SQLException e) {
                 throw new JdbcException(e);
             }
+        }
+    }
+
+    public void deleteTestBoard() throws JdbcException {
+        String nameTestBoard = "testBoard";
+
+        int id = 0;
+        String getBoardId = "select id from boards where sudokuname=?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(getBoardId)) {
+            preparedStatement.setString(1, nameTestBoard);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                id = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new JdbcException(e);
+        }
+
+        String deleteFields = "delete from fields where boardid=?";
+        String deleteBoard = "delete from boards where id=?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(deleteFields)) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new JdbcException(e);
+        }
+        try (PreparedStatement preparedStatement = connection.prepareStatement(deleteBoard)) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new JdbcException(e);
         }
     }
 

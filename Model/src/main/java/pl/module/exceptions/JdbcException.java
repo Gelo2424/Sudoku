@@ -8,4 +8,5 @@ public class JdbcException extends DaoException {
     public JdbcException(String message, Throwable e) {
         super(message, e);
     }
+
 }
