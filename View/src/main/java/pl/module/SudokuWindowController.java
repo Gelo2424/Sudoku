@@ -2,18 +2,18 @@ package pl.module;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Observable;
 import java.util.ResourceBundle;
-
 import javafx.application.Platform;
 import javafx.beans.property.adapter.JavaBeanIntegerProperty;
 import javafx.beans.property.adapter.JavaBeanIntegerPropertyBuilder;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,7 +31,8 @@ import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.module.exceptions.*;
+import pl.module.exceptions.FxmlException;
+import pl.module.exceptions.JdbcException;
 
 public class SudokuWindowController {
 
@@ -43,7 +44,8 @@ public class SudokuWindowController {
     private ObservableList<String> names;
 
 
-    private static final Logger logger = LoggerFactory.getLogger(MenuWindowController.class.getName());
+    private static final Logger logger
+            = LoggerFactory.getLogger(MenuWindowController.class.getName());
     private final FileChooser fileChooser = new FileChooser();
     private final SudokuSolver sudokuSolver = new BacktrackingSudokuSolver();
     private static DifficultyLevel.Difficulty difficulty;
@@ -106,7 +108,8 @@ public class SudokuWindowController {
 
                 } catch (NoSuchMethodException e) {
                     logger.error("Cant bind field (" + i + ", " + j + ")");
-                    DialogBox.showMessage(bundle.getString("errorFillBoard"), Alert.AlertType.ERROR);
+                    DialogBox.showMessage(bundle.getString("errorFillBoard"),
+                            Alert.AlertType.ERROR);
                     exit();
                 }
                 textField.setAlignment(Pos.CENTER);
@@ -144,7 +147,8 @@ public class SudokuWindowController {
             DialogBox.showMessage(bundle.getString("errorLoad"), Alert.AlertType.WARNING);
             return;
         }
-        try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(file.toString() + "Template")) {
+        try (Dao<SudokuBoard> dao
+                     = SudokuBoardDaoFactory.getFileDao(file.toString() + "Template")) {
             readTemplate = dao.read();
         } catch (Exception e) {
             logger.warn(e.getMessage() + ". Cant find template");
@@ -179,7 +183,8 @@ public class SudokuWindowController {
             logger.warn(e.getMessage());
             DialogBox.showMessage(bundle.getString("errorWrite"), Alert.AlertType.WARNING);
         }
-        try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(file.toString() + "Template")) {
+        try (Dao<SudokuBoard> dao
+                     = SudokuBoardDaoFactory.getFileDao(file.toString() + "Template")) {
             dao.write(sudokuBoardTemplate);
             //setHiddenAttrib(Paths.get(file.toString() + "Template"));
         } catch (Exception e) {
@@ -199,11 +204,12 @@ public class SudokuWindowController {
     public void readFromDatabase() {
         JdbcSudokuBoardDao.numOfBoard = 0;
         String nameOfGame = nameChoiceBox.getSelectionModel().getSelectedItem();
-        if(nameOfGame == null || nameOfGame.equals("")) {
-            DialogBox.showMessage(bundle.getString("databaseErrorReadingName"), Alert.AlertType.WARNING);
+        if (nameOfGame == null || nameOfGame.equals("")) {
+            DialogBox.showMessage(bundle.getString("databaseErrorReadingName"),
+                    Alert.AlertType.WARNING);
             return;
         }
-        try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getJdbcDao(nameOfGame)){
+        try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getJdbcDao(nameOfGame)) {
             logger.info("Connecting to databse");
             sudokuBoardCopy = dao.read();
             sudokuBoardTemplate = dao.read();
@@ -212,14 +218,15 @@ public class SudokuWindowController {
             fillBoard();
         } catch (Exception e) {
             logger.warn("Cant read sudoku from database");
-            DialogBox.showMessage(bundle.getString("databaseErrorReading"), Alert.AlertType.WARNING);
+            DialogBox.showMessage(bundle.getString("databaseErrorReading"),
+                    Alert.AlertType.WARNING);
         }
     }
 
     public void writeToDatabase() {
         JdbcSudokuBoardDao.numOfBoard = 0;
         String nameOfGame = nameForSave.getText();
-        try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getJdbcDao(nameOfGame)){
+        try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getJdbcDao(nameOfGame)) {
             logger.info("Connecting to databse");
             dao.write(sudokuBoardCopy);
             dao.write(sudokuBoardTemplate);
@@ -227,19 +234,27 @@ public class SudokuWindowController {
 
         } catch (Exception e) {
             logger.warn("Cant write sudoku to database");
-            if(e.toString().contains("duplicate key")) {
+            if (e.toString().contains("duplicate key")) {
                 logger.warn("Duplicate name of sudoku");
-                DialogBox.showMessage(bundle.getString("databaseDuplicateKey"), Alert.AlertType.WARNING);
+                DialogBox.showMessage(bundle.getString("databaseDuplicateKey"),
+                        Alert.AlertType.WARNING);
                 return;
             }
-            DialogBox.showMessage(bundle.getString("databaseErrorWriting"), Alert.AlertType.WARNING);
+            DialogBox.showMessage(bundle.getString("databaseErrorWriting"),
+                    Alert.AlertType.WARNING);
         }
     }
 
     public void checkBoard() {
         logger.info("Checking sudoku");
-        //TODO
 
+//        for (int i = 0; i < 9; i++) {
+//            for (int j = 0; j < 9; j++) {
+//                System.out.print(sudokuBoardCopy.get(i, j) + " ");
+//            }
+//            System.out.println();
+//        }
+//        System.out.println();
     }
 
     public void exit() throws FxmlException {
