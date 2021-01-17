@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import pl.module.exceptions.JdbcException;
 
 
@@ -198,6 +199,24 @@ public class JdbcSudokuBoardDao implements Dao<SudokuBoard> {
             throw new JdbcException(e);
         }
     }
+
+    public ArrayList<String> getNames() throws JdbcException {
+
+        ArrayList<String> namesDB = new ArrayList<>();
+        String getBoards = "select sudokuname from boards";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(getBoards)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                String name = resultSet.getString(1);
+                namesDB.add(name);
+            }
+        } catch (SQLException e) {
+            throw new JdbcException(e);
+        }
+        return namesDB;
+    }
+
+
 
     @Override
     public void close() throws Exception {

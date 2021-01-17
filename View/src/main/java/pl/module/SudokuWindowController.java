@@ -2,12 +2,6 @@ package pl.module;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.beans.property.adapter.JavaBeanIntegerProperty;
@@ -43,7 +37,6 @@ public class SudokuWindowController {
     public TextField nameForSave;
     private ObservableList<String> names;
 
-
     private static final Logger logger
             = LoggerFactory.getLogger(MenuWindowController.class.getName());
     private final FileChooser fileChooser = new FileChooser();
@@ -65,30 +58,6 @@ public class SudokuWindowController {
         DifficultyLevel.prepareBoard(sudokuBoardCopy, difficulty);
         sudokuBoardTemplate = (SudokuBoard) sudokuBoardCopy.clone();
         fillBoard();
-
-        String url = "jdbc:postgresql://localhost/Sudoku";
-        String username = "postgres";
-        String password = "qwerty";
-        Connection connection;
-        try {
-            connection = DriverManager.getConnection(url, username, password);
-        } catch (SQLException e) {
-            throw new JdbcException(e);
-        }
-
-        ArrayList<String> namesDB = new ArrayList<>();
-        String getBoards = "select sudokuname from boards";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(getBoards)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                String name = resultSet.getString(1);
-                namesDB.add(name);
-            }
-        } catch (SQLException e) {
-            throw new JdbcException(e);
-        }
-        names = FXCollections.observableArrayList(namesDB);
-        nameChoiceBox.setItems(names);
     }
 
     private void fillBoard() throws FxmlException {
@@ -245,16 +214,25 @@ public class SudokuWindowController {
         }
     }
 
-    public void checkBoard() {
-        logger.info("Checking sudoku");
+    public void readNames(){
+        try(JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(" ")) {
+            names = FXCollections.observableArrayList(dao.getNames());
+            nameChoiceBox.setItems(names);
+        } catch (Exception e) {
+            DialogBox.showMessage("Cant read names",
+                    Alert.AlertType.WARNING);
+        }
 
-//        for (int i = 0; i < 9; i++) {
-//            for (int j = 0; j < 9; j++) {
-//                System.out.print(sudokuBoardCopy.get(i, j) + " ");
-//            }
-//            System.out.println();
-//        }
-//        System.out.println();
+    }
+
+    public void checkBoard() throws JdbcException {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                System.out.print(sudokuBoardCopy.get(i, j) + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
     }
 
     public void exit() throws FxmlException {
