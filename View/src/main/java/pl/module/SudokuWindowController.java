@@ -225,14 +225,20 @@ public class SudokuWindowController {
 
     }
 
-    public void checkBoard() throws JdbcException {
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                System.out.print(sudokuBoardCopy.get(i, j) + " ");
-            }
-            System.out.println();
+    public void checkBoard() throws JdbcException, FxmlException {
+        boolean isCorrect = sudokuBoardCopy.checkBoardForTests();
+        String messgage;
+        if(isCorrect) {
+            messgage = bundle.getString("correctBoard");
+        } else {
+            messgage = bundle.getString("uncorrectBoard");
         }
-        System.out.println();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setContentText(messgage);
+        alert.showAndWait();
+        if(isCorrect) {
+            exit();
+        }
     }
 
     public void exit() throws FxmlException {
